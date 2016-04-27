@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="group54.androidchess">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Android Chess54"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainMenu">
+            <intent-filter>
+                android:name=".MainActivity">
+                android:parentActivityName=".MainMenu"
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainMenu" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ChessActivity"></activity>
+            <intent-filter>
+                android:name=".ChessActivity">
+                android:parentActivityName=".ChessActivity"
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ChessActivity" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        <activity android:name=".Replay"></activity>
+            <intent-filter>
+                android:name=".Replay">
+                android:parentActivityName=".Replay"
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".Replay" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+    </application>
+
+</manifest>

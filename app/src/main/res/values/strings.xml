@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Android Chess54</string>
+    <string name="white_turn" value="White's Turn"></string>
+    <string name="black_turn" value="Black's Turn"></string>
+    <string name="white_win">White wins!</string>
+    <string name="black_win">Black wins!</string>
+    <string name="white_check">White King in check</string>
+    <string name="black_check">Black King in check</string>
+    <string-array name="track_moves"> </string-array>
+
+</resources>
