@@ -8,18 +8,14 @@ public class ChessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ChessboardView chessboardView = new ChessboardView(this);
+        //setContentView(chessboardView);
         setContentView(R.layout.activity_main);
-
-
     }
 
 
-    private void createBoard()
+    private void setPlayerTurnText()
     {
-        // Highlight board with black outline
 
-
-
-        // Color black squares and set text to be white
     }
 }

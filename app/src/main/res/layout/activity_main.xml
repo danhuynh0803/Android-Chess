@@ -9,6 +9,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ChessActivity">
 
+    <group54.androidchess.ChessboardView
+        android:id="@+id/ChessboardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,58 +22,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Player Turn"
         android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:clickable="false" />
-
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:clickable="false"
-        android:rowCount="8"
-        android:columnCount="8"
-        android:useDefaultMargins="false"
-        android:padding="0dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@color/colorPrimary"
-            android:text="bR"></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="bKn" ></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@color/colorPrimary"
-            android:text="bB" ></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="bQ" ></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@color/colorPrimary"
-            android:text="bK" ></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="bB" ></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@color/colorPrimary"
-            android:text="bKn" ></TextView>
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="bR" ></TextView>
-
-    </GridLayout>
 </RelativeLayout>
