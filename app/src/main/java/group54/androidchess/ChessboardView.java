@@ -6,6 +6,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+// Import all associated chess files
+import group54.androidchess.chess.*;
 
 public final class ChessboardView extends View {
     private static final String TAG = ChessboardView.class.getSimpleName();
@@ -83,8 +85,6 @@ public final class ChessboardView extends View {
     public boolean onTouchEvent(final MotionEvent event) {
         final int x = (int) event.getX();
         final int y = (int) event.getY();
-
-
 
         Tile tile;
         for (int c = 0; c < COLS; c++) {

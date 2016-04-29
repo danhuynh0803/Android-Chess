@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Player Turn"
-        android:id="@+id/textView"
+        android:id="@+id/turnTextView"
         android:layout_gravity="center"
         android:clickable="false"
         android:layout_alignParentTop="true"
