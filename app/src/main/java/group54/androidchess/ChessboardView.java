@@ -1,6 +1,8 @@
 package group54.androidchess;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -16,6 +18,8 @@ public final class ChessboardView extends View {
     private static final int ROWS = 8;
 
     private final Tile[][] mTiles;
+    private Canvas canvas;
+    private Rect tileRect;
 
     private int x0 = 0;
     private int y0 = 0;
@@ -46,13 +50,14 @@ public final class ChessboardView extends View {
     private void buildTiles() {
         for (int c = 0; c < COLS; c++) {
             for (int r = 0; r < ROWS; r++) {
-                mTiles[c][r] = new Tile(c, r);
+                mTiles[c][r] = new Tile(c, r, new WhiteSpaces("Empty"));
             }
         }
     }
 
     @Override
     protected void onDraw(final Canvas canvas) {
+        this.canvas = canvas;
         final int width = getWidth();                         // Canvas width
         final int height = getHeight();                       // Canvas Height
 
@@ -68,7 +73,7 @@ public final class ChessboardView extends View {
                 final int xCoord = getXCoord(c);
                 final int yCoord = getYCoord(r);
 
-                final Rect tileRect = new Rect(
+                tileRect = new Rect(
                     xCoord,               // left
                     yCoord,               // top
                     xCoord + squareSize,  // right
@@ -79,6 +84,9 @@ public final class ChessboardView extends View {
                 mTiles[c][r].draw(canvas);
             }
         }
+
+        //for pawns
+        createPawns();
     }
 
     @Override
@@ -120,5 +128,38 @@ public final class ChessboardView extends View {
         this.x0 = (width  - squareSize * 8) / 2;
         this.y0 = (height - squareSize * 8) / 2;
     }
+
+    private void createPawns()
+    {
+        //creates the white pawns
+
+        for(int y = 0; y<8; y++){ //print only 8 pawns
+
+            Bitmap pic = BitmapFactory.decodeResource(getResources(),R.drawable.whitepawn);
+            int x = tileRect.width();
+            int z = tileRect.height();
+            Bitmap picResized = Bitmap.createScaledBitmap(pic,x,z,true);
+            mTiles[y][1].draw(canvas,mTiles[y][1].getTileRect(), picResized);
+            Pawn pawn = new Pawn("wp","white");
+            mTiles[y][1].setPiece(pawn);
+            //System.out.println(mTiles[y][1].pieceName);
+            //System.out.println(mTiles[y][1].pieceColor);
+        }
+
+        //creates the black pawns
+        for(int y=0; y<8; y++){ //print only 8 pawns
+            Bitmap pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackpawn);
+            int x = tileRect.width();
+            int z = tileRect.height();
+            Bitmap picResized = Bitmap.createScaledBitmap(pic,x,z,true);
+            mTiles[y][6].draw(canvas,mTiles[y][6].getTileRect(), picResized);
+            Pawn pawn = new Pawn("bp", "black");
+            mTiles[y][6].setPiece(pawn);
+            //System.out.println(mTiles[y][6].pieceName);
+
+
+        }
+    }
+
 
 }
