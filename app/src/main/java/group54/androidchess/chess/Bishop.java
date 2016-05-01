@@ -1,5 +1,7 @@
 package group54.androidchess.chess;
 
+import group54.androidchess.Tile;
+
 public class Bishop extends Piece {
 	
 
@@ -11,7 +13,7 @@ public class Bishop extends Piece {
 	
 	
 	//@Override
-	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
+	public boolean legitMove(Tile[][] gameBoard, int originalRow,
 			int originalColumn, int finalRow, int finalColumn){
 		
 		int rowDiff = (finalRow - originalRow);
@@ -106,7 +108,7 @@ public class Bishop extends Piece {
 
 
 	//@Override
-	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) throws Exception{
+	public boolean placeCheck(Tile[][] gameBoard, int currentRow, int currentCol) throws Exception{
 		
 		try{
 				String currentTurn;
@@ -114,8 +116,8 @@ public class Bishop extends Piece {
 				currentTurn = gameBoard[currentRow][currentCol].pieceColor;
 				oppositeTurn = changeTurn(currentTurn);
 					//get kings position
-					int kingRow = getKingRow(gameBoard, oppositeTurn);
-					int kingCol = getKingCol(gameBoard, oppositeTurn);
+					int kingRow = Chess.getKingRow(gameBoard, oppositeTurn);
+					int kingCol = Chess.getKingCol(gameBoard, oppositeTurn);
 					
 					int rowDiff = (kingRow - currentRow);
 					int colDiff = (kingCol - currentCol);

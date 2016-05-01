@@ -1,5 +1,7 @@
 package group54.androidchess.chess;
 
+import group54.androidchess.Tile;
+
 /**
  * @author Ammar Hussain
  * @author Danny Huynh
@@ -28,8 +30,8 @@ public class King extends Piece {
 	 * @param finalColumn
 	 * @return boolean: true if king and rook satisfy castling conditions
 	 */
-	private boolean canCastle(Piece[][] gameBoard, int originalRow, 
-			int originalColumn, int finalColumn)
+	private boolean canCastle(Tile[][] gameBoard, int originalRow,
+							  int originalColumn, int finalColumn)
 	{
 		// King can only castle if it and the rook has not yet moved
 		if (this.firstMove == false || inCheck == true)
@@ -81,7 +83,7 @@ public class King extends Piece {
 	}
 
 	//@Override
-	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
+	public boolean legitMove(Tile[][] gameBoard, int originalRow,
 			int originalColumn, int finalRow, int finalColumn){
 
 		// If final column is one of the two castle positions on either side, we check if the king can castle
@@ -141,7 +143,7 @@ public class King extends Piece {
 	}
 
 	//@Override
-	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) {
+	public boolean placeCheck(Tile[][] gameBoard, int currentRow, int currentCol) {
 		// King can never place enemy king in check and this will always return false
 		return false;
 	}	
@@ -214,7 +216,7 @@ public class King extends Piece {
 	 */
 	public boolean checkmateHelper(Piece[][] gameBoard, int oRow, int oCol, String color)
 	{
-		if (checkByPawn(gameBoard, oRow, oCol, color) || 
+		if (checkByPawn(gameBoard, oRow, oCol, color) ||
 				checkByKnight(gameBoard, oRow, oCol, color) ||
 				checkByRook(gameBoard, oRow, oCol, color) || 
 				checkByBishop(gameBoard, oRow, oCol, color))

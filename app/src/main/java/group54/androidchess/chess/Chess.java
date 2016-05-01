@@ -5,6 +5,8 @@ package group54.androidchess.chess;
 
 import java.util.Scanner;
 
+import group54.androidchess.Tile;
+
 /**
  * @author Ammar Hussain
  * @author Danny Huynh
@@ -670,12 +672,12 @@ public class Chess {
 		
 	}
 	
-	public static int getKingRow(Piece[][] gameBoard, String kingColor){
+	public static int getKingRow(Tile[][] gameBoard, String kingColor){
 		
-		for(int x=0; x<gameBoard.length-1; x++){
-			for(int y=0; y<gameBoard[x].length-1; y++){
+		for(int x=0; x<gameBoard.length; x++){
+			for(int y=0; y<gameBoard[x].length; y++){
 				if(gameBoard[x][y].pieceName.contains("K")
-						&& gameBoard[x][y].pieceColor==kingColor){
+						&& gameBoard[x][y].pieceColor.equals(kingColor)) {
 					return x;
 				}
 			}
@@ -684,7 +686,7 @@ public class Chess {
 		
 	}
 	
-	public static int getKingCol(Piece[][] gameBoard, String kingColor){
+	public static int getKingCol(Tile[][] gameBoard, String kingColor){
 		
 		for(int x=0; x<gameBoard.length-1; x++){
 			for(int y=0; y<gameBoard[x].length-1; y++){

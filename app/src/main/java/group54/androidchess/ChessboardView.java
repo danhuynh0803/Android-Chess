@@ -40,6 +40,8 @@ public final class ChessboardView extends View {
     private int squareSize = 0;
     private boolean tileSelected = false;
 
+    private String currentTurn = "white";
+
     /** 'true' if black is facing player. */
     private boolean flipped = false;
 
@@ -119,6 +121,21 @@ public final class ChessboardView extends View {
         }
     }
 
+    /**
+     * Switch turn after a valid turn from the other player
+     * @param turn
+     * @return
+     */
+    private String switchTurn(String turn) {
+        if (turn.equals("white"))
+            return "black";
+        else
+            return "white";
+    }
+
+    public String getTurn() {
+        return currentTurn;
+    }
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
@@ -136,8 +153,10 @@ public final class ChessboardView extends View {
 
                         if (mTiles[c][r].isTouched(initialX, initialY)) {
                             //if an empty tile is selected, pop an error
-                            if(mTiles[c][r].pieceName.equals("Empty")){
+                            if(mTiles[c][r].pieceName.equals("Empty")) {
                                 Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
+                            } else if (!(mTiles[c][r].pieceColor.equals(currentTurn))) {
+                                Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 // Set tile color currently selected to blue
@@ -150,7 +169,6 @@ public final class ChessboardView extends View {
                     }
                 }
             }
-
 
             //options for 2nd selection
             else {
@@ -238,28 +256,18 @@ public final class ChessboardView extends View {
                             Toast.makeText(getContext(), "im here", Toast.LENGTH_SHORT).show();
                             firstSelect = true;
 
-
-                            //continue from here
+                            // Switch to other player turn
+                            currentTurn = switchTurn(currentTurn);
                         }
 
                         }catch(Exception e){
                         }
-
-
-
-
                     }
-
                 }
-
-
                 //for (int c = 0; c < COLS; c++) {
                 //  for (int r = 0; r < ROWS; r++) {
-
             }
             invalidate();
-
-
         }
         return true;
     }

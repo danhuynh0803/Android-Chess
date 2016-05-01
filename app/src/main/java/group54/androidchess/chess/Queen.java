@@ -1,6 +1,8 @@
 package group54.androidchess.chess;
 
 
+import group54.androidchess.Tile;
+
 /**
  * @author Ammar Hussain
  * @author Danny Huynh
@@ -17,8 +19,8 @@ public class Queen extends Piece {
 	
 
 	//@Override
-	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
-			int originalColumn, int finalRow, int finalColumn){
+	public boolean legitMove(Tile[][] gameBoard, int originalRow,
+							 int originalColumn, int finalRow, int finalColumn){
 		
 		int rowDiff = (finalRow - originalRow);
 		int colDiff = (finalColumn - originalColumn);
@@ -169,7 +171,7 @@ public class Queen extends Piece {
 
 
 	//@Override
-	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) {
+	public boolean placeCheck(Tile[][] gameBoard, int currentRow, int currentCol) {
 		
 		try{
 			String currentTurn;
@@ -177,8 +179,8 @@ public class Queen extends Piece {
 			currentTurn = gameBoard[currentRow][currentCol].pieceColor;
 			oppositeTurn = changeTurn(currentTurn);
 				//get kings position
-				int kingRow = getKingRow(gameBoard, oppositeTurn);
-				int kingCol = getKingCol(gameBoard, oppositeTurn);
+				int kingRow = Chess.getKingRow(gameBoard, oppositeTurn);
+				int kingCol = Chess.getKingCol(gameBoard, oppositeTurn);
 				
 				int rowDiff = (kingRow - currentRow);
 				int colDiff = (kingCol - currentCol);

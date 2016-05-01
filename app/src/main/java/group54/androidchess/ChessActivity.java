@@ -19,25 +19,6 @@ public class ChessActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TextView turnText = (TextView)findViewById(R.id.turnTextView);
-        setTurnText(turnText);
 
-        // Start game loop
-
-    }
-
-    private void startGame()
-    {
-
-    }
-
-
-
-    private void setTurnText(TextView text)
-    {
-        if (currentTurn % 2 == 0) {
-            text.setText("White's Turn");
-        }
-        else
-            text.setText("Black's Turn");
     }
 }
