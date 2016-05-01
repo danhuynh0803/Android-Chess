@@ -16,7 +16,7 @@ public class Queen extends Piece {
 	
 	
 
-	@Override
+	//@Override
 	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
 			int originalColumn, int finalRow, int finalColumn){
 		
@@ -168,7 +168,7 @@ public class Queen extends Piece {
 		
 
 
-	@Override
+	//@Override
 	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) {
 		
 		try{

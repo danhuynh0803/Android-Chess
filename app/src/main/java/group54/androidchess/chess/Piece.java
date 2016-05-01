@@ -3,6 +3,8 @@
  */
 package group54.androidchess.chess;
 
+import group54.androidchess.Tile;
+
 /**
  * @author Ammar Hussain
  * @author Danny Huynh
@@ -50,8 +52,8 @@ public abstract class Piece {
 	 * @return true if the move is legit
 	 */
 	
-	public abstract boolean legitMove(Piece[][] gameBoard, int originalRow, 
-			int originalColumn, int finalRow, int finalColumn);
+	public boolean legitMove(Tile[][] gameBoard, int originalRow,
+									  int originalColumn, int finalRow, int finalColumn)throws Exception{return false;}
 	
 	/**
 	 * 
@@ -62,8 +64,8 @@ public abstract class Piece {
 	 * @throws Exception will ignore any out of range checks
 	 */
 	
-	public abstract boolean placeCheck(Piece[][] gameBoard,int currentRow, int currentCol) throws Exception;
-	
+	public boolean placeCheck(Tile[][] gameBoard,int currentRow, int currentCol) throws Exception{return false;}
+
 	/**
 	 * 
 	 * @param gameBoard the current game board

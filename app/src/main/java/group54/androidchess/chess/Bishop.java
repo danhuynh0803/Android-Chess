@@ -10,7 +10,7 @@ public class Bishop extends Piece {
 	}
 	
 	
-	@Override
+	//@Override
 	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
 			int originalColumn, int finalRow, int finalColumn){
 		
@@ -105,7 +105,7 @@ public class Bishop extends Piece {
 	}
 
 
-	@Override
+	//@Override
 	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) throws Exception{
 		
 		try{

@@ -22,10 +22,10 @@ public class GameBoard {
 		createSpaces();
 		
 		// Create pieces
-		//createPawns();
-		//createBishops();
-		//createKnights();
-		//createRooks();
+		createPawns();
+		createBishops();
+		createKnights();
+		createRooks();
 		createKings();
 		createQueens();
 		

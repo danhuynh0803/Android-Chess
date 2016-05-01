@@ -80,7 +80,7 @@ public class King extends Piece {
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
 			int originalColumn, int finalRow, int finalColumn){
 
@@ -140,7 +140,7 @@ public class King extends Piece {
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) {
 		// King can never place enemy king in check and this will always return false
 		return false;

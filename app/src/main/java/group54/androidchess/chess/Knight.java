@@ -61,7 +61,7 @@ public class Knight extends Piece {
 
 
 
-	@Override
+	//@Override
 	/**
 	 * Check if enemy king is placed within check by this piece
 	 */

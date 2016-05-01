@@ -15,14 +15,14 @@ public class WhiteSpaces extends Piece {
 		this.pieceName = pieceName;
 	}
 	
-	@Override
+	//@Override
 	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
 			int originalColumn, int finalRow, int finalColumn){
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) {
 		// TODO Auto-generated method stub
 		return false;

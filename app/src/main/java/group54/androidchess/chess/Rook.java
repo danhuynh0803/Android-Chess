@@ -21,7 +21,7 @@ public class Rook extends Piece {
 	/**
 	 * Rooks can only move on a single row or column.
 	 */
-	@Override
+	//@Override
 	public boolean legitMove(Piece[][] gameBoard, int originalRow, 
 			int originalColumn, int finalRow, int finalColumn)
 	{
@@ -94,7 +94,7 @@ public class Rook extends Piece {
 
 
 
-	@Override
+	//@Override
 	public boolean placeCheck(Piece[][] gameBoard, int currentRow, int currentCol) 
 	{
 		try{

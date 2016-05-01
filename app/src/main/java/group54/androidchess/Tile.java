@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.text.style.TtsSpan;
 import android.util.Log;
@@ -34,6 +35,7 @@ public final class Tile {
     public String pieceColor;
     public Boolean firstMove;
     public Boolean Enpassant;
+    public Canvas canvas;
 
     public Tile(final int col, final int row, Piece piece) {
         this.col = col;
@@ -44,6 +46,7 @@ public final class Tile {
         this.pieceColor = piece.pieceColor;
         this.firstMove = piece.firstMove;
         this.Enpassant = piece.Enpassant;
+
 
         this.defaultColor = new Paint();
         this.highlightColor = new Paint();
@@ -59,7 +62,8 @@ public final class Tile {
      * Draw a rectangle at specified dimensions and positon with color
      * @param canvas
      */
-    public void draw(final Canvas canvas) {
+    public void draw( Canvas canvas) {
+        this.canvas = canvas;
         if (selected)
             canvas.drawRect(tileRect, highlightColor);
         else
@@ -72,11 +76,15 @@ public final class Tile {
      * @param pic the image of the piece
      */
     public void draw( Canvas canvas, Rect tileRect, Bitmap pic) {
-        //this.canvas = canvas;
-
+        this.canvas = canvas;
+        //draw(canvas);
+        Paint clearPaint = new Paint();
+        clearPaint.setColor(Color.BLACK);
+        canvas.drawRect(0,0,0,0, clearPaint);
         canvas.drawBitmap(pic,tileRect.left,tileRect.top, new Paint(Color.RED));
 
     }
+
 
     /**
      * assigns the tile a certain piece
@@ -88,6 +96,9 @@ public final class Tile {
         this.pieceColor = piece.pieceColor;
         this.firstMove = piece.firstMove;
         this.Enpassant = piece.Enpassant;
+    }
+    public Piece getPiece(){
+        return this.piece;
     }
 
     /**

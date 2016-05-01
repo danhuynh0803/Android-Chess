@@ -184,7 +184,7 @@ public class Chess {
 
 			
 			//checks if it is a valid move
-			else if(board.gameBoard[oRow][oCol].legitMove(board.gameBoard, oRow, oCol, fRow, fCol) == true){
+	/*		else if(board.gameBoard[oRow][oCol].legitMove(board.gameBoard, oRow, oCol, fRow, fCol) == true){
 				// Check if the piece is a king
 				if (board.gameBoard[oRow][oCol].pieceName.equals("wK") || board.gameBoard[oRow][oCol].pieceName.equals("bK"))
 				{
@@ -277,27 +277,7 @@ public class Chess {
 				}
 								
 				
-				//if king is still in check, take back that move, else do the move
-				if(kingInCheck == true){
-					
-					/*
-					// Check for checkmate by using King piece checkmate helper
-					King temp = (King) board.gameBoard[oRow][oCol];
-					if (temp.isCheckMate(board.gameBoard, oRow, oCol, temp.pieceColor))
-					{
-						// Checkmate on this color
-						String oppositeColor; 
-						if (temp.pieceColor.equals("white"))
-							oppositeColor = "black";
-						else 
-							oppositeColor = "white";
-						
-						System.out.println(oppositeColor + "wins!");
-						turn = null;
-						scan.close();
-						return;
-					}
-					*/
+
 						//board.gameBoard[fRow][fCol] = board.gameBoard[oRow][oCol];
 						outerloop:
 						for(int x = 0; x<board.gameBoard.length-1; x++){//skip last row
@@ -512,17 +492,17 @@ public class Chess {
 					turn = switchTurn(turn);
 				}
 			
-			}
+			}*/
 			else{
 				System.out.println("Error: Not a Valid Move! Try Again!!!");
 			}
 		}catch (Exception e){System.out.println("Out of Range Error: Enter a Valid Move!");}
 			
 			
-			/*//this will replace the original piece with either white space or black space
-			board.gameBoard[oRow][oCol] = toEmptySpot(board.gameBoard, oRow, oCol);
-			System.out.println(board.gameBoard[oRow][oCol].pieceName);
-			*/
+			//this will replace the original piece with either white space or black space
+			//board.gameBoard[oRow][oCol] = toEmptySpot(board.gameBoard, oRow, oCol);
+			//System.out.println(board.gameBoard[oRow][oCol].pieceName);
+			//
 			board.gameBoard[8][8] = toEmptySpot(board.gameBoard, 8, 8); //change temp back to normal
 			System.out.println("");
 			printLatestBoard(board.gameBoard);
@@ -532,7 +512,7 @@ public class Chess {
 			
 			
 		}//while loop ends here
-		
+
 		
 		
 		
