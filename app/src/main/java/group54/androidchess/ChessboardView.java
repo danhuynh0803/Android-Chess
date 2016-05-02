@@ -8,13 +8,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.EventLog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 // Import all associated chess files
+import java.util.ArrayList;
+import java.util.Stack;
+
 import group54.androidchess.chess.*;
 
 public final class ChessboardView extends View {
@@ -23,7 +29,9 @@ public final class ChessboardView extends View {
     private static final int COLS = 8;
     private static final int ROWS = 8;
 
-    private final Tile[][] mTiles;
+    public static Tile[][] mTiles;
+    public static ArrayList<PieceInfo> tileList = new ArrayList<PieceInfo>();//holds the data
+
     private Canvas canvas = new Canvas();
     private Rect tileRect;
     int rectHeight= 54;
@@ -40,10 +48,19 @@ public final class ChessboardView extends View {
     private int squareSize = 0;
     private boolean tileSelected = false;
 
-    private String currentTurn = "white";
+    public static String currentTurn = "white";
+    public static boolean undoAvailable = false;
+    //public static ArrayList listPieceInfo;
 
     /** 'true' if black is facing player. */
     private boolean flipped = false;
+
+
+    int initCol=-1; //for initial Tile within mTiles array
+    int initRow=-1;
+
+    int finalCol=-1; //for final Tile within mTiles array
+    int finalRow=-1;
 
     public ChessboardView(final Context context) {
         super(context);
@@ -84,6 +101,7 @@ public final class ChessboardView extends View {
             createBishops();
             createKings();
             createQueens();
+
             firstTime=false;
         }else {
             //canvas = new Canvas();
@@ -121,16 +139,62 @@ public final class ChessboardView extends View {
         }
     }
 
+    public void onClick(){
+
+
+        if(ChessboardView.undoAvailable){
+            // get all the appropriate values
+            int tileListSize = tileList.size();
+            int iRow = tileList.get(tileListSize-1).getiRow();
+            int iCol = tileList.get(tileListSize-1).getiCol();
+            int fRow = tileList.get(tileListSize-1).getfRow();
+            int fCol = tileList.get(tileListSize-1).getfCol();
+            Piece initPiece = tileList.get(tileListSize-1).getInitialPiece();
+            Piece finalPiece = tileList.get(tileListSize-1).getFinalPiece();
+
+            //move back the piece to it's original spot
+            mTiles[iRow][iCol].setPiece(initPiece);
+            //remove the final piece and replace it with the original
+            mTiles[fRow][fCol].setPiece(finalPiece);
+
+            undoAvailable=false;
+            updateBoard(mTiles);
+            Toast.makeText(getContext(), "Undo Successful", Toast.LENGTH_SHORT).show();
+            if (ChessboardView.currentTurn.equals("white")){
+                ChessActivity.white.setVisibility(View.INVISIBLE);
+                ChessActivity.black.setVisibility(View.VISIBLE);
+                ChessboardView.currentTurn = "black";
+            }
+            else {
+                ChessActivity.white.setVisibility(View.VISIBLE);
+                ChessActivity.black.setVisibility(View.INVISIBLE);
+                ChessboardView.currentTurn = "white";
+            }
+
+        }
+        else{
+            Toast.makeText(getContext(), "Undo Not Available", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
     /**
      * Switch turn after a valid turn from the other player
-     * @param turn
-     * @return
+     * @param turn the current player's turn
+     * @return the other player's turn
      */
-    private String switchTurn(String turn) {
-        if (turn.equals("white"))
+    public String switchTurn(String turn) {
+        if (turn.equals("white")){
+            getRootView().findViewById(R.id.whiteTurnTextView).setVisibility(INVISIBLE);
+            getRootView().findViewById(R.id.blackTurnTextView).setVisibility(VISIBLE);
             return "black";
-        else
+        }
+        else {
+            getRootView().findViewById(R.id.whiteTurnTextView).setVisibility(VISIBLE);
+            getRootView().findViewById(R.id.blackTurnTextView).setVisibility(INVISIBLE);
             return "white";
+        }
     }
 
     public String getTurn() {
@@ -206,11 +270,11 @@ public final class ChessboardView extends View {
                 }
                 else{
 
-                    int initCol=-1; //for initial Tile within mTiles array
-                    int initRow=-1;
+                    //int initCol=-1; //for initial Tile within mTiles array
+                   // int initRow=-1;
 
-                    int finalCol=-1; //for final Tile within mTiles array
-                    int finalRow=-1;
+                   // int finalCol=-1; //for final Tile within mTiles array
+                    //int finalRow=-1;
 
                     //to get tile locations for intial tile and final tile
                     for (int r = 0; r < ROWS; r++) {
@@ -241,8 +305,13 @@ public final class ChessboardView extends View {
                     else {
                         //Log.d(TAG,""+mTiles[initCol][initRow].firstMove);
                         try{
-                            Log.d(TAG, ""+ initRow + initCol + finalRow + finalCol);
+                            Log.d(TAG, "initRow"+ initRow);
+                            Log.d(TAG, "initCol"+ initCol);
+                            Log.d(TAG, "finalRow"+ finalRow);
+                            Log.d(TAG, "finalCol"+ finalCol);
+                            //checks the move of the selected piece
                         if(mTiles[initRow][initCol].getPiece().legitMove(mTiles,initRow,initCol,finalRow,finalCol)) {
+                            undoAvailable = true;
                             // Check if the movement is from a King
                             if (mTiles[initRow][initCol].pieceName.equals("wK") || mTiles[initRow][initCol].pieceName.equals("bK")) {
                                 King king = (King) mTiles[initRow][initCol].getPiece();
@@ -266,6 +335,8 @@ public final class ChessboardView extends View {
                                         mTiles[initRow][rookCol].setPiece(new WhiteSpaces("Empty"));
                                         mTiles[initRow][rookCol].draw(canvas);
 
+                                        //insert this data into the undo array list later
+
                                     } else if (colDiff < 0) {
                                         // Castle the left-side rook by moving king to final position
                                         mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
@@ -280,23 +351,34 @@ public final class ChessboardView extends View {
                                         mTiles[initRow][rookCol].setPiece(new WhiteSpaces("Empty"));
                                         mTiles[initRow][rookCol].draw(canvas);
 
+                                        //insert this data into the undo array list later
+
                                     }
                                     king.removeCastle();
 
                                     // Move normally if king is not castling
                                 } else {
+                                    //store the moves
+                                    storeData();
                                     mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
                                     mTiles[initRow][initCol].selected = false;
                                     mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
                                     mTiles[initRow][initCol].draw(canvas);
+
                                 }
+                                //if king is not being moved, then move the selected pieces
                             } else {
+                                //store the moves
+                                storeData();
                                 Log.d(TAG, "" + mTiles[initCol][initRow].firstMove);
                                 mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
                                 mTiles[initRow][initCol].selected = false;
                                 mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
                                 mTiles[initRow][initCol].draw(canvas);
+
                             }
+
+                            //after the legitMove boolean check,
                             Toast.makeText(getContext(), "im here", Toast.LENGTH_SHORT).show();
                             firstSelect = true;
 
@@ -313,18 +395,30 @@ public final class ChessboardView extends View {
         return true;
     }
 
+
+    /**
+     * stores initial row, col and final row, col and the initial piece and final piece into an Array, which gets stored into the ArrayList
+     */
+    public void storeData(){
+
+        PieceInfo pieceInfo = new PieceInfo(initRow, initCol, finalRow, finalCol,
+                mTiles[initRow][initCol].getPiece(),mTiles[finalRow][finalCol].getPiece());
+        tileList.add(pieceInfo);
+
+    }
+
     /**
      * Prints the chess board
      * @param tile current tiles holding the data
      */
-    private void updateBoard(Tile tile[][]){
+    public void updateBoard(Tile tile[][]){
         //Canvas canvas = new Canvas();
         Bitmap pic;
         Bitmap picResized;
         buildEmptyTiles();
 
-        rectWidth = tile[0][0].getTileRect().width();
-        rectHeight = tile[0][0].getTileRect().height();
+        //rectWidth = tile[0][0].getTileRect().width();
+        //rectHeight = tile[0][0].getTileRect().height();
 
         for(int x = 0; x<8; x++){
             for(int y =0; y<8; y++){
@@ -375,6 +469,7 @@ public final class ChessboardView extends View {
                              tile[x][y].draw(canvas,tile[x][y].getTileRect(),picResized);
                              break;
                          case "wR":
+                             //Log.d(TAG, rectWidth +"and" + rectHeight);
                              pic = BitmapFactory.decodeResource(getResources(),R.drawable.whiterook);
                              picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
                              tile[x][y].draw(canvas,tile[x][y].getTileRect(),picResized);

@@ -239,7 +239,7 @@ public class Chess {
 					board.gameBoard[fRow][fCol] = board.gameBoard[oRow][oCol];
 					board.gameBoard[oRow][oCol] = toEmptySpot(board.gameBoard, oRow, oCol);
 				}
-				
+				_________________________________________________________
 				//enpassant will be available for this turn only
 				if(whiteEnpassantAllowed==true){
 					//if enpassant is allowed to kill white pawn
