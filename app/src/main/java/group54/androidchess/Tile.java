@@ -23,24 +23,21 @@ public final class Tile {
     private final int row;
     public boolean selected = false;
 
-    // Text for piece currently on square
-    //private Text pieceName2;
-    private Piece piece;
 
     private Paint defaultColor;
     private Paint highlightColor;
     private Rect tileRect;
 
+    private Piece piece;
     public String pieceName;
     public String pieceColor;
     public Boolean firstMove;
     public Boolean Enpassant;
     public Canvas canvas;
 
-    public Tile(final int col, final int row, Piece piece) {
-        this.col = col;
+    public Tile(final int row, final int col, Piece piece) {
         this.row = row;
-
+        this.col = col;
         this.piece = piece;
         this.pieceName = piece.pieceName;
         this.pieceColor = piece.pieceColor;
@@ -85,6 +82,7 @@ public final class Tile {
 
     }
 
+    public Piece getPiece() { return piece; }
 
     /**
      * assigns the tile a certain piece
@@ -97,9 +95,7 @@ public final class Tile {
         this.firstMove = piece.firstMove;
         this.Enpassant = piece.Enpassant;
     }
-    public Piece getPiece(){
-        return this.piece;
-    }
+
 
     /**
      * Check if the square should be darkened

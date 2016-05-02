@@ -1,5 +1,7 @@
 package group54.androidchess.chess;
 
+import android.os.Debug;
+
 import group54.androidchess.Tile;
 
 /**
@@ -33,6 +35,8 @@ public class King extends Piece {
 	private boolean canCastle(Tile[][] gameBoard, int originalRow,
 							  int originalColumn, int finalColumn)
 	{
+		System.out.println("in canCastle");
+		System.out.println(originalColumn + " " + finalColumn);
 		// King can only castle if it and the rook has not yet moved
 		if (this.firstMove == false || inCheck == true)
 			return false;

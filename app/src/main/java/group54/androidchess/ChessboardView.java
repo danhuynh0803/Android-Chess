@@ -47,7 +47,7 @@ public final class ChessboardView extends View {
 
     public ChessboardView(final Context context) {
         super(context);
-        this.mTiles = new Tile[COLS][ROWS];
+        this.mTiles = new Tile[ROWS][COLS];
 
         setFocusable(true);
 
@@ -56,7 +56,7 @@ public final class ChessboardView extends View {
 
     public ChessboardView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        this.mTiles = new Tile[COLS][ROWS];
+        this.mTiles = new Tile[ROWS][COLS];
 
         setFocusable(true);
 
@@ -64,9 +64,9 @@ public final class ChessboardView extends View {
     }
 
     private void buildTiles() {
-        for (int c = 0; c < COLS; c++) {
-            for (int r = 0; r < ROWS; r++) {
-                mTiles[c][r] = new Tile(c, r, new WhiteSpaces("Empty"));
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                mTiles[r][c] = new Tile(r, c, new WhiteSpaces("Empty"));
             }
         }
     }
@@ -103,8 +103,8 @@ public final class ChessboardView extends View {
 
         computeOrigins(width, height);
 
-        for (int c = 0; c < COLS; c++) {
-            for (int r = 0; r < ROWS; r++) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
                 final int xCoord = getXCoord(c);
                 final int yCoord = getYCoord(r);
 
@@ -115,8 +115,8 @@ public final class ChessboardView extends View {
                         yCoord + squareSize   // bottom
                 );
 
-                mTiles[c][r].setTileRect(tileRect);
-                mTiles[c][r].draw(canvas);
+                mTiles[r][c].setTileRect(tileRect);
+                mTiles[r][c].draw(canvas);
             }
         }
     }
@@ -148,21 +148,22 @@ public final class ChessboardView extends View {
             if (firstSelect) {
                 initialX = (int) event.getX();
                 initialY = (int) event.getY();
-                for (int c = 0; c < COLS; c++) {
-                    for (int r = 0; r < ROWS; r++) {
+                for (int r = 0; r < ROWS; r++) {
+                    for (int c = 0; c < COLS; c++) {
 
-                        if (mTiles[c][r].isTouched(initialX, initialY)) {
+                        if (mTiles[r][c].isTouched(initialX, initialY)) {
                             //if an empty tile is selected, pop an error
-                            if(mTiles[c][r].pieceName.equals("Empty")) {
+                            Log.d(TAG, "row: " + r + " col: " + c);
+                            if(mTiles[r][c].pieceName.equals("Empty")) {
                                 Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
-                            } else if (!(mTiles[c][r].pieceColor.equals(currentTurn))) {
+                            } else if (!(mTiles[r][c].pieceColor.equals(currentTurn))) {
                                 Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 // Set tile color currently selected to blue
-                                mTiles[c][r].selected = true;
-                                mTiles[c][r].draw(canvas);
-                                Log.d(TAG, mTiles[c][r].pieceName);
+                                mTiles[r][c].selected = true;
+                                mTiles[r][c].draw(canvas);
+                                Log.d(TAG, mTiles[r][c].pieceName);
                                 firstSelect = false;
                             }
                         }
@@ -190,13 +191,14 @@ public final class ChessboardView extends View {
 
                 //if both selections were on the same piece, then deselect
                 if (finalX == initialX && finalY == initialY) {
-                    for (int c = 0; c < COLS; c++) {
-                        for (int r = 0; r < ROWS; r++) {
+                    for (int r = 0; r < ROWS; r++) {
+                        for (int c = 0; c < COLS; c++) {
 
-                            if (mTiles[c][r].isTouched(finalX, finalY)) {
+                            if (mTiles[r][c].isTouched(finalX, finalY)) {
                                 // Set tile color back to default color
-                                mTiles[c][r].selected = false;
-                                mTiles[c][r].draw(canvas);
+                                mTiles[r][c].selected = false;
+                                mTiles[r][c].draw(canvas);
+                                mTiles[r][c].handleTouch();
                                 firstSelect = true;
                             }
                         }
@@ -211,14 +213,13 @@ public final class ChessboardView extends View {
                     int finalRow=-1;
 
                     //to get tile locations for intial tile and final tile
-                    for (int c = 0; c < COLS; c++) {
-                        for (int r = 0; r < ROWS; r++) {
-
-                            if (mTiles[c][r].isTouched(initialX, initialY)){
+                    for (int r = 0; r < ROWS; r++) {
+                        for (int c = 0; c < COLS; c++) {
+                            if (mTiles[r][c].isTouched(initialX, initialY)){
                                     initCol = c;
                                     initRow = r;
                             }
-                            if(mTiles[c][r].isTouched(finalX,finalY)){
+                            if(mTiles[r][c].isTouched(finalX,finalY)){
                                 finalCol = c;
                                 finalRow = r;
                             }
@@ -229,30 +230,73 @@ public final class ChessboardView extends View {
                         Toast.makeText(getContext(), "Error Occured, Try Again", Toast.LENGTH_SHORT).show();
                     }
                     //makes sures to reset the highlight if user tries to kil their own piece
-                    else if(mTiles[initCol][initRow].pieceColor.equals(mTiles[finalCol][finalRow].pieceColor)){
+                    else if(mTiles[initRow][initCol].pieceColor.equals(mTiles[finalRow][finalCol].pieceColor)){
                         Toast.makeText(getContext(), "Cannot kill your own piece!", Toast.LENGTH_SHORT).show();
-                        mTiles[initCol][initRow].selected = false;
-                        mTiles[initCol][initRow].draw(canvas);
+                        mTiles[initRow][initCol].selected = false;
+                        mTiles[initRow][initCol].draw(canvas);
                         firstSelect = true;
 
                     }
                     //if final tile is chosen anywhere besides own piece
                     else {
-                        Log.d(TAG,""+mTiles[initCol][initRow].firstMove);
-                        //just for now to cancel the highlight
-                       // mTiles[initCol][initRow].selected = false;
-                        //mTiles[initCol][initRow].draw(canvas);
-                        //firstSelect = true;
-                        //Toast.makeText(getContext(), "im here", Toast.LENGTH_SHORT).show();
-                        //check if the movement is correct
+                        //Log.d(TAG,""+mTiles[initCol][initRow].firstMove);
                         try{
-                        if(mTiles[initCol][initRow].getPiece().legitMove(mTiles,initCol,initRow,finalCol,finalRow)) {
-                            //then perform the movement
-                            Log.d(TAG, "" + mTiles[initCol][initRow].firstMove);
-                            mTiles[finalCol][finalRow].setPiece(mTiles[initCol][initRow].getPiece());
-                            mTiles[initCol][initRow].selected = false;
-                            mTiles[initCol][initRow].setPiece(new WhiteSpaces("Empty"));
-                            mTiles[initCol][initRow].draw(canvas);
+                            Log.d(TAG, ""+ initRow + initCol + finalRow + finalCol);
+                        if(mTiles[initRow][initCol].getPiece().legitMove(mTiles,initRow,initCol,finalRow,finalCol)) {
+                            // Check if the movement is from a King
+                            if (mTiles[initRow][initCol].pieceName.equals("wK") || mTiles[initRow][initCol].pieceName.equals("bK")) {
+                                King king = (King) mTiles[initRow][initCol].getPiece();
+                                // Check if king is castling
+                                if (king.isCastling()) {
+                                    // Check the side the king is castling to by comparing difference between columns
+                                    Toast.makeText(getContext(), "King castles", Toast.LENGTH_SHORT).show();
+// Check which side the king is castling by comparing the difference between columns
+                                    int colDiff = finalRow - initRow;
+                                    if (colDiff > 0) {
+                                        // Castle the right-side rook by moving king to final position
+                                        mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
+                                        mTiles[initRow][initCol].selected = false;
+                                        mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
+                                        mTiles[initRow][initCol].draw(canvas);
+
+                                        // Move right-side rook to left of king at it's final position
+                                        int rookCol = 7;
+                                        mTiles[finalRow][finalCol - 1].setPiece(mTiles[initRow][rookCol].getPiece());
+                                        mTiles[initRow][rookCol].selected = false;
+                                        mTiles[initRow][rookCol].setPiece(new WhiteSpaces("Empty"));
+                                        mTiles[initRow][rookCol].draw(canvas);
+
+                                    } else if (colDiff < 0) {
+                                        // Castle the left-side rook by moving king to final position
+                                        mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
+                                        mTiles[initRow][initCol].selected = false;
+                                        mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
+                                        mTiles[initRow][initCol].draw(canvas);
+
+                                        // Move left-side rook to left of king at it's final position
+                                        int rookCol = 0;
+                                        mTiles[finalRow][finalCol + 1].setPiece(mTiles[initRow][rookCol].getPiece());
+                                        mTiles[initRow][rookCol].selected = false;
+                                        mTiles[initRow][rookCol].setPiece(new WhiteSpaces("Empty"));
+                                        mTiles[initRow][rookCol].draw(canvas);
+
+                                    }
+                                    king.removeCastle();
+
+                                    // Move normally if king is not castling
+                                } else {
+                                    mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
+                                    mTiles[initRow][initCol].selected = false;
+                                    mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
+                                    mTiles[initRow][initCol].draw(canvas);
+                                }
+                            } else {
+                                Log.d(TAG, "" + mTiles[initCol][initRow].firstMove);
+                                mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
+                                mTiles[initRow][initCol].selected = false;
+                                mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
+                                mTiles[initRow][initCol].draw(canvas);
+                            }
                             Toast.makeText(getContext(), "im here", Toast.LENGTH_SHORT).show();
                             firstSelect = true;
 
@@ -260,12 +304,9 @@ public final class ChessboardView extends View {
                             currentTurn = switchTurn(currentTurn);
                         }
 
-                        }catch(Exception e){
-                        }
+                        }catch(Exception e){ }
                     }
                 }
-                //for (int c = 0; c < COLS; c++) {
-                //  for (int r = 0; r < ROWS; r++) {
             }
             invalidate();
         }
@@ -401,10 +442,10 @@ public final class ChessboardView extends View {
 
             Bitmap pic = BitmapFactory.decodeResource(getResources(),R.drawable.whitepawn);
             Bitmap picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-            mTiles[y][1].draw(canvas,mTiles[y][1].getTileRect(), picResized);
+            mTiles[1][y].draw(canvas,mTiles[1][y].getTileRect(), picResized);
 
             Pawn pawn = new Pawn("wP","white");
-            mTiles[y][1].setPiece(pawn);
+            mTiles[1][y].setPiece(pawn);
             //System.out.println(mTiles[y][1].pieceName);
             //System.out.println(mTiles[y][1].pieceColor);
         }
@@ -413,9 +454,9 @@ public final class ChessboardView extends View {
         for(int y=0; y<8; y++){ //print only 8 pawns
             Bitmap pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackpawn);
             Bitmap picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-            mTiles[y][6].draw(canvas,mTiles[y][6].getTileRect(), picResized);
+            mTiles[6][y].draw(canvas,mTiles[6][y].getTileRect(), picResized);
             Pawn pawn = new Pawn("bP", "black");
-            mTiles[y][6].setPiece(pawn);
+            mTiles[6][y].setPiece(pawn);
             //System.out.println(mTiles[y][6].pieceName);
 
 
@@ -432,18 +473,18 @@ public final class ChessboardView extends View {
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.whiterook);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
         mTiles[0][0].draw(canvas,mTiles[0][0].getTileRect(),picResized);
-        mTiles[7][0].draw(canvas,mTiles[7][0].getTileRect(),picResized);
+        mTiles[0][7].draw(canvas,mTiles[0][7].getTileRect(),picResized);
         rook = new Rook("wR","white");
         mTiles[0][0].setPiece(rook);
-        mTiles[7][0].setPiece(rook);
+        mTiles[0][7].setPiece(rook);
 
         //create the Black rooks
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackrook);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[0][7].draw(canvas,mTiles[0][7].getTileRect(),picResized);
+        mTiles[7][0].draw(canvas,mTiles[7][0].getTileRect(),picResized);
         mTiles[7][7].draw(canvas,mTiles[7][7].getTileRect(),picResized);
         rook = new Rook("bR","black");
-        mTiles[0][7].setPiece(rook);
+        mTiles[7][0].setPiece(rook);
         mTiles[7][7].setPiece(rook);
 
     }
@@ -458,20 +499,20 @@ public final class ChessboardView extends View {
         //create the White knight
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.whiteknight);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[1][0].draw(canvas,mTiles[1][0].getTileRect(),picResized);
-        mTiles[6][0].draw(canvas,mTiles[6][0].getTileRect(),picResized);
+        mTiles[0][1].draw(canvas,mTiles[1][0].getTileRect(),picResized);
+        mTiles[0][6].draw(canvas,mTiles[6][0].getTileRect(),picResized);
         knight = new Knight("wN","white");
-        mTiles[1][0].setPiece(knight);
-        mTiles[6][0].setPiece(knight);
+        mTiles[0][1].setPiece(knight);
+        mTiles[0][6].setPiece(knight);
 
         //create the Black knight
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackknight);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[1][7].draw(canvas,mTiles[1][7].getTileRect(),picResized);
-        mTiles[6][7].draw(canvas,mTiles[6][7].getTileRect(),picResized);
+        mTiles[7][1].draw(canvas,mTiles[7][1].getTileRect(),picResized);
+        mTiles[7][6].draw(canvas,mTiles[7][6].getTileRect(),picResized);
         knight = new Knight("bN","black");
-        mTiles[1][7].setPiece(knight);
-        mTiles[6][7].setPiece(knight);
+        mTiles[7][1].setPiece(knight);
+        mTiles[7][6].setPiece(knight);
     }
 
     /**
@@ -483,20 +524,20 @@ public final class ChessboardView extends View {
         //create the White Bishop
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.whitebishop);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[2][0].draw(canvas,mTiles[2][0].getTileRect(),picResized);
-        mTiles[5][0].draw(canvas,mTiles[5][0].getTileRect(),picResized);
+        mTiles[0][2].draw(canvas,mTiles[0][2].getTileRect(),picResized);
+        mTiles[0][5].draw(canvas,mTiles[0][5].getTileRect(),picResized);
         bishop = new Bishop("wB","white");
-        mTiles[2][0].setPiece(bishop);
-        mTiles[5][0].setPiece(bishop);
+        mTiles[0][2].setPiece(bishop);
+        mTiles[0][5].setPiece(bishop);
 
         //create the Black Bishop
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackbishop);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[2][7].draw(canvas,mTiles[2][7].getTileRect(),picResized);
-        mTiles[5][7].draw(canvas,mTiles[5][7].getTileRect(),picResized);
+        mTiles[7][2].draw(canvas,mTiles[7][2].getTileRect(),picResized);
+        mTiles[7][5].draw(canvas,mTiles[7][5].getTileRect(),picResized);
         bishop = new Bishop("bB","black");
-        mTiles[2][7].setPiece(bishop);
-        mTiles[5][7].setPiece(bishop);
+        mTiles[7][2].setPiece(bishop);
+        mTiles[7][5].setPiece(bishop);
     }
 
     private void createKings()
@@ -505,16 +546,16 @@ public final class ChessboardView extends View {
         //create the White King
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.whiteking);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[4][0].draw(canvas,mTiles[4][0].getTileRect(),picResized);
+        mTiles[0][4].draw(canvas,mTiles[0][4].getTileRect(),picResized);
         king = new King("wK","white");
-        mTiles[4][0].setPiece(king);
+        mTiles[0][4].setPiece(king);
 
         //create the Black King
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackking);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[4][7].draw(canvas,mTiles[4][7].getTileRect(),picResized);
+        mTiles[7][4].draw(canvas,mTiles[4][7].getTileRect(),picResized);
         king = new King("bK","black");
-        mTiles[4][7].setPiece(king);
+        mTiles[7][4].setPiece(king);
     }
 
     private void createQueens()
@@ -523,17 +564,19 @@ public final class ChessboardView extends View {
         //create the White Queen
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.whitequeen);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[3][0].draw(canvas,mTiles[3][0].getTileRect(),picResized);
+        mTiles[0][3].draw(canvas,mTiles[0][3].getTileRect(),picResized);
         queen = new Queen("wQ","white");
-        mTiles[3][0].setPiece(queen);
+        mTiles[0][3].setPiece(queen);
 
         //create the Black Queen
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackqueen);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[3][7].draw(canvas,mTiles[3][7].getTileRect(),picResized);
+        mTiles[7][3].draw(canvas,mTiles[7][3].getTileRect(),picResized);
         queen = new Queen("bQ","black");
-        mTiles[3][7].setPiece(queen);
+        mTiles[7][3].setPiece(queen);
     }
+
+    /*
     private void moveQueen(){
 
             Queen queen;
@@ -545,6 +588,6 @@ public final class ChessboardView extends View {
             queen = new Queen("wQ","white");
             mTiles[0][7].setPiece(queen);
     }
-
+*/
 
 }
