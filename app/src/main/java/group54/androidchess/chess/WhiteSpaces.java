@@ -3,12 +3,16 @@
  */
 package group54.androidchess.chess;
 
+import java.io.Serializable;
+
 /**
  * @author Ammar Hussain
  * @author Danny Huynh
  *
  */
-public class WhiteSpaces extends Piece {
+public class WhiteSpaces extends Piece implements Serializable{
+
+	private static final long serialVersionUID = 0L;
 
 	
 	public WhiteSpaces(String pieceName){

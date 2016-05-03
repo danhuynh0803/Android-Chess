@@ -1,5 +1,6 @@
 package group54.androidchess;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import group54.androidchess.chess.Piece;
@@ -7,8 +8,9 @@ import group54.androidchess.chess.Piece;
 /**
  * Created by Ammar on 5/2/2016.
  */
-public class PieceInfo {
+public class PieceInfo implements Serializable{
 
+    private static final long serialVersionUID = 1L;
     public ArrayList listPieceInfo;
     public int iRow;
     public int iCol;

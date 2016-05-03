@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.EventLog;
 import android.util.Log;
@@ -30,7 +31,7 @@ public final class ChessboardView extends View {
     private static final int ROWS = 8;
 
     public static Tile[][] mTiles;
-    public static ArrayList<PieceInfo> tileList = new ArrayList<PieceInfo>();//holds the data
+    public static ArrayList<PieceInfo> tileList;//holds the data
 
     private Canvas canvas = new Canvas();
     private Rect tileRect;
@@ -96,6 +97,8 @@ public final class ChessboardView extends View {
         this.canvas = canvas;
 
         if(firstTime) {
+            //create a new list to store movements
+            tileList = new ArrayList<PieceInfo>();
             //for Creating Pieces
             buildEmptyTiles();
             createPawns();

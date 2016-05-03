@@ -1,9 +1,12 @@
 package group54.androidchess.chess;
 
+import java.io.Serializable;
+
 import group54.androidchess.Tile;
 
-public class Bishop extends Piece {
-	
+public class Bishop extends Piece implements Serializable{
+
+	private static final long serialVersionUID = 0L;
 
 	
 	public Bishop(String pieceName, String pieceColor){

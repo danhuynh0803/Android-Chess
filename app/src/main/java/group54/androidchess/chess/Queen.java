@@ -1,6 +1,8 @@
 package group54.androidchess.chess;
 
 
+import java.io.Serializable;
+
 import group54.androidchess.Tile;
 
 /**
@@ -8,8 +10,9 @@ import group54.androidchess.Tile;
  * @author Danny Huynh
  *
  */
-public class Queen extends Piece {
+public class Queen extends Piece implements Serializable{
 
+	private static final long serialVersionUID = 0L;
 	
 	public Queen(String pieceName, String pieceColor){
 		this.pieceName = pieceName;

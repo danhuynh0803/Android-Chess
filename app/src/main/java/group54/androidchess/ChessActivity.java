@@ -3,18 +3,25 @@ package group54.androidchess;
 // Import all associated chess files
 import group54.androidchess.chess.*;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,6 +30,10 @@ public class ChessActivity extends AppCompatActivity {
     public static TextView white;
     public static TextView black;
     public static TextView turn;
+    public int counter =1;
+    public static StorageList savedGames = new StorageList();;
+    public static File file;
+    public static File newFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,12 @@ public class ChessActivity extends AppCompatActivity {
         final Button resignBtn = (Button) findViewById(R.id.resign);
         final Button drawBtn = (Button) findViewById(R.id.draw);
         final View chessboardView1 = (View) findViewById(R.id.ChessboardView);
+        //makes the file
+        file = new File(chessboardView1.getContext().getFilesDir()+File.separator+
+                StorageList.storeDir);
+        file.mkdir();
+        newFile = new File(file,StorageList.storeFile);
+
 
         resignBtn.setOnClickListener( new View.OnClickListener(){
             public void onClick(View v){
@@ -65,6 +82,51 @@ public class ChessActivity extends AppCompatActivity {
                         undoBtn.setVisibility(View.GONE);
                         helpBtn.setVisibility(View.GONE);
 
+                        //------------------- for saving data-------------------\\
+                        LinearLayout layout = new LinearLayout(chessboardView1.getContext());
+                        layout.setOrientation(LinearLayout.VERTICAL);
+
+                        AlertDialog.Builder savingDialog = new AlertDialog.Builder(chessboardView1.getContext());
+                        savingDialog.setMessage("Would you like to save this game?");
+                        final EditText gameTitle = new EditText(chessboardView1.getContext());
+                        gameTitle.setHint("Game Title: Untitled");
+                        layout.addView(gameTitle);
+                        savingDialog.setView(layout);
+                        //if you press yes
+                        savingDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //if game title isn't given, use default name
+                                if(gameTitle.getText().toString().isEmpty()){
+                                    gameTitle.setText("Untitled"+counter);
+                                    counter++;
+                                }
+
+
+                                //make an object to hold game name, date and the data list
+                                Movements gameData = new Movements(gameTitle.getText().toString(),ChessboardView.tileList);
+                                //add to the savedGames list
+                                savedGames.addGameToSavedList(gameData);
+                                Toast.makeText(chessboardView1.getContext(), "Saved Game in"+newFile.getPath(), Toast.LENGTH_LONG).show();
+                                Log.d(chessboardView1.getContext().toString(),"Saved Game in"+newFile.getPath());
+                                try {
+                                    StorageList.write(savedGames);
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                        //if you press no
+                        savingDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alert1 = savingDialog.create();
+                        alert1.show();
+
+
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -72,8 +134,10 @@ public class ChessActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+
                 AlertDialog alert = builder.create();
                 alert.show();
+
 
                 chessboardView1.invalidate();
             }

@@ -3,6 +3,8 @@
  */
 package group54.androidchess.chess;
 
+import java.io.Serializable;
+
 import group54.androidchess.Tile;
 
 /**
@@ -10,8 +12,9 @@ import group54.androidchess.Tile;
  * @author Danny Huynh
  *
  */
-public class Rook extends Piece {
+public class Rook extends Piece implements Serializable {
 
+	private static final long serialVersionUID = 0L;
 	
 	public Rook(String pieceName, String pieceColor){
 		this.pieceName = pieceName;

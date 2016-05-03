@@ -2,6 +2,8 @@ package group54.androidchess.chess;
 
 import android.os.Debug;
 
+import java.io.Serializable;
+
 import group54.androidchess.Tile;
 
 /**
@@ -10,8 +12,9 @@ import group54.androidchess.Tile;
  *
  */
 
-public class King extends Piece {	
-	
+public class King extends Piece implements Serializable {
+
+	private static final long serialVersionUID = 0L;
 	private boolean willCastle = false;
 	private boolean inCheck = false; 
 	

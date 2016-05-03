@@ -3,6 +3,8 @@ package group54.androidchess.chess; /**
  */
 
 
+import java.io.Serializable;
+
 import group54.androidchess.Tile;
 import group54.androidchess.chess.Piece;
 
@@ -11,8 +13,9 @@ import group54.androidchess.chess.Piece;
  * @author Danny Huynh
  *
  */
-public class Pawn extends Piece {
+public class Pawn extends Piece implements Serializable{
 
+    private static final long serialVersionUID = 0L;
 
     public Pawn(String pieceName, String pieceColor){
         this.pieceName = pieceName;
