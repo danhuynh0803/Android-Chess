@@ -33,24 +33,26 @@ public class Pawn extends Piece {
             //if it is the first move
             if(gameBoard[originalRow][originalColumn].firstMove ==true){
                 //to only move 1 rank
-                if(  ((originalRow-1) == finalRow ) && (originalColumn== finalColumn)
+                if(  ((originalRow+1) == finalRow ) && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "black") ){
-                    gameBoard[originalRow][originalColumn].firstMove = false;
+                    this.firstMove = false;
                     return true;
                 }
                 //to move 2 ranks
-                if( originalRow-2 == finalRow && (originalColumn== finalColumn
+                if( originalRow+2 == finalRow && (originalColumn== finalColumn
                         && (gameBoard[finalRow][finalColumn].pieceColor != "black"))){
-                    gameBoard[originalRow][originalColumn].firstMove = false;
-                    gameBoard[originalRow][originalColumn].Enpassant = true;
+                    //gameBoard[originalRow][originalColumn].firstMove = false;
+                    this.firstMove = false;
+                    this.Enpassant = true;
                     return true;
                 }
                 //to capture in the first move
                 else if( (gameBoard[finalRow][finalColumn].pieceColor=="black") &&
-                        (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
-                                || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
-                    gameBoard[originalRow][originalColumn].firstMove = false;
-                    gameBoard[originalRow][originalColumn].Enpassant = false;
+                        (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
+                                || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
+                    //gameBoard[originalRow][originalColumn].firstMove = false;
+                    this.firstMove = false;
+                    this.Enpassant = true;
                     return true;
                 }
 
@@ -58,22 +60,22 @@ public class Pawn extends Piece {
             //if it is not the first move
             else if(gameBoard[originalRow][originalColumn].firstMove ==false){
                 //to move 1 rank
-                if(originalRow-1 == finalRow && (originalColumn== finalColumn)
+                if(originalRow+1 == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "black")){
-                    gameBoard[originalRow][originalColumn].Enpassant = false;
+                    this.Enpassant = false;
                     return true;
                 }
                 //to capture a piece
                 else if( (gameBoard[finalRow][finalColumn].pieceColor=="black") &&
-                        (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
-                                || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
-                    gameBoard[originalRow][originalColumn].Enpassant = false;
+                        (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
+                                || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
+                    this.Enpassant = false;
                     return true;
                 }
                 //to capture via enpassant
-                else if( (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
-                        || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])
-                        &&(gameBoard[finalRow+1][finalColumn].Enpassant==true)){
+                else if( (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
+                        || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])
+                        &&(gameBoard[finalRow+1][finalColumn].Enpassant==true)){       // Change finalRow + 1? to -1? or leave as is
                     return true;
 
                 }
@@ -84,23 +86,23 @@ public class Pawn extends Piece {
             //if it is the first move
             if(gameBoard[originalRow][originalColumn].firstMove ==true){
                 //to only move 1 rank
-                if(  (originalRow+1) == finalRow && (originalColumn== finalColumn)
+                if(  (originalRow-1) == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "white")){
-                    gameBoard[originalRow][originalColumn].firstMove = false;
+                    this.firstMove = false;
                     return true;
                 }
                 //to move 2 ranks
-                if( originalRow+2 == finalRow && (originalColumn== finalColumn)
+                if( originalRow-2 == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "white")){
-                    gameBoard[originalRow][originalColumn].firstMove = false;
-                    gameBoard[originalRow][originalColumn].Enpassant = true;
+                    this.firstMove = false;
+                    this.Enpassant = true;
                     return true;
                 }
                 //to capture in the first move
                 else if( (gameBoard[finalRow][finalColumn].pieceColor=="white") &&
-                        (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
-                                || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
-                    gameBoard[originalRow][originalColumn].firstMove = false;
+                        (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
+                                || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
+                    this.firstMove = false;
                     return true;
                 }
 
@@ -108,48 +110,46 @@ public class Pawn extends Piece {
             //if it is not the first move
             else if(gameBoard[originalRow][originalColumn].firstMove ==false){
                 //to only move 1 rank
-                if(originalRow+1 == finalRow && (originalColumn== finalColumn)
+                if(originalRow-1 == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "white")){
-                    gameBoard[originalRow][originalColumn].Enpassant = false;
+                    this.Enpassant = false;
                     return true;
                 }
                 //to capture a piece
                 else if( (gameBoard[finalRow][finalColumn].pieceColor=="white") &&
-                        (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
-                                || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
-                    gameBoard[originalRow][originalColumn].Enpassant = false;
+                        (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
+                                || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
+                    this.Enpassant = false;
                     return true;
                 }
                 //to capture via enpassant
-                else if( (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
-                        || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])
-                        &&(gameBoard[finalRow-1][finalColumn].Enpassant==true)){
+                else if( (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
+                        || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])
+                        &&(gameBoard[finalRow+1][finalColumn].Enpassant==true)){  // Changed finalRow-1 to finalRow + 1
                     return true;
-
                 }
             }
         }
-
         return false;
     }
 
 
-
+    // Modify for check by swapping +1 and -1s
     @Override
     public boolean placeCheck(Tile[][] gameBoard, int currentRow, int currentCol) throws Exception{
 
         try{
             //white pawn placing check on black king
             if(gameBoard[currentRow][currentCol].pieceColor =="white"){
-                if( (gameBoard[currentRow-1][currentCol+1].pieceName == "bK")
-                        || (gameBoard[currentRow-1][currentCol-1].pieceName == "bK") ){
+                if( (gameBoard[currentRow+1][currentCol+1].pieceName == "bK")
+                        || (gameBoard[currentRow+1][currentCol-1].pieceName == "bK") ){
                     return true;
                 }
             }
             //black pawn placing check on white king
             else if(gameBoard[currentRow][currentCol].pieceColor =="black"){
-                if( (gameBoard[currentRow+1][currentCol+1].pieceName == "wK")
-                        || (gameBoard[currentRow+1][currentCol-1].pieceName == "wK") ){
+                if( (gameBoard[currentRow-1][currentCol+1].pieceName == "wK")
+                        || (gameBoard[currentRow-1][currentCol-1].pieceName == "wK") ){
                     return true;
                 }
             }
