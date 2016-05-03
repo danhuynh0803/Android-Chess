@@ -55,20 +55,38 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/ai_help"
         android:id="@+id/help"
-        android:layout_alignRight="@+id/ChessboardView"
-        android:layout_alignEnd="@+id/ChessboardView"
-        android:layout_alignBottom="@+id/whiteTurnTextView"
         android:textAlignment="center"
-        android:layout_alignParentTop="true" />
+        android:layout_alignTop="@+id/undo"
+        android:layout_alignRight="@+id/ChessboardView"
+        android:layout_alignEnd="@+id/ChessboardView" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/undo"
         android:id="@+id/undo"
-        android:layout_below="@+id/whiteTurnTextView"
-        android:layout_alignRight="@+id/ChessboardView"
-        android:layout_alignEnd="@+id/ChessboardView"
-        android:layout_alignBottom="@+id/turn" />
+        android:layout_alignBottom="@+id/turn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resign Match"
+        android:id="@+id/resign"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/turn"
+        android:layout_toStartOf="@+id/turn" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Propose Draw?"
+        android:id="@+id/draw"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/turn"
+        android:layout_toEndOf="@+id/turn" />
 
 </RelativeLayout>

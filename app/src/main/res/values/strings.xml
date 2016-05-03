@@ -1,7 +1,7 @@
-<resources>
+ <resources>
     <string name="app_name">Android Chess54</string>
-    <string name="white_turn">White Player\'s</string>
-    <string name="black_turn">Black Player\'s</string>
+    <string name="white_turn">White</string>
+    <string name="black_turn">Black</string>
     <string name="turn">Turn</string>
     <string name="white_win">White wins!</string>
     <string name="black_win">Black wins!</string>
