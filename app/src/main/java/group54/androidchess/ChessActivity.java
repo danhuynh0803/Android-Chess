@@ -121,22 +121,10 @@ public class ChessActivity extends AppCompatActivity {
                 white = (TextView) chessboardView1.getRootView().findViewById(R.id.whiteTurnTextView);
                 black = (TextView) chessboardView1.getRootView().findViewById(R.id.blackTurnTextView);
                 chessboardView.onClick();
-
-                //white.setVisibility(View.VISIBLE);
-                //black.setVisibility(View.INVISIBLE);
-
-
-                   /* if (ChessboardView.currentTurn.equals("white")){
-                        white.setVisibility(View.INVISIBLE);
-                        black.setVisibility(View.VISIBLE);
-                        ChessboardView.currentTurn = "black";
-                    }
-                    else {
-                        white.setVisibility(View.VISIBLE);
-                        black.setVisibility(View.INVISIBLE);
-                        ChessboardView.currentTurn = "white";
-                    }*/
+                //ChessboardView.undoSelection=true;
+                ChessboardView.firstSelect = true;
                 chessboardView1.invalidate();
+
                 }
        });
 

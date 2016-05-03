@@ -42,8 +42,9 @@ public final class ChessboardView extends View {
     int initialX = -1;
     int initialY= -1;
     public boolean firstTime = true;   //to limit creation of more pieces
-    public boolean firstSelect = true; //selecting the first time
+    public static boolean firstSelect = true; //selecting the first time
     public static boolean isGameOver = false; // prevent selection if game is over
+
 
     private int x0 = 0;
     private int y0 = 0;
@@ -160,6 +161,17 @@ public final class ChessboardView extends View {
             //remove the final piece and replace it with the original
             mTiles[fRow][fCol].setPiece(finalPiece);
 
+            //if a piece was selected before presing undo, deselect that piece
+            for(int x =0; x<8; x++){
+                for(int y=0; y<8; y++){
+                    if(mTiles[x][y].selected==true) {
+                        mTiles[x][y].selected = false;
+                        mTiles[x][y].draw(canvas);
+                    }
+                }
+            }
+
+
             undoAvailable=false;
             updateBoard(mTiles);
             Toast.makeText(getContext(), "Undo Successful", Toast.LENGTH_SHORT).show();
@@ -241,8 +253,10 @@ public final class ChessboardView extends View {
                 }
             }
 
+
             //options for 2nd selection
             else {
+
                 //int eventPointerIndex = event.findPointerIndex(eventPointerID);
                 final int finalX = (int) event.getX();
                 final int finalY = (int) event.getY();
