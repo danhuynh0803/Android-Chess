@@ -39,7 +39,7 @@ public class MainMenu extends AppCompatActivity {
     public void replayOnClick(View v)
     {
         Bundle bundle = new Bundle();
-        Intent intent = new Intent(this, ChessActivity.class);
+        Intent intent = new Intent(this, Replay.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

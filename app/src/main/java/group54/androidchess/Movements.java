@@ -17,11 +17,12 @@ public class Movements implements Serializable{
     private String gameTitle;
     private String date;
     private ArrayList<PieceInfo> tileList;
-    private DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
     public Movements(String title, ArrayList<PieceInfo> tileList){
         this.gameTitle = title;
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MILLISECOND, 0);
         this.date = dateFormat.format(cal.getTime());
         this.tileList = tileList;
     }

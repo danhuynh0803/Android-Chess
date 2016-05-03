@@ -9,6 +9,8 @@
     <string name="black_check">Black King in check</string>
     <string name="undo">Undo</string>
     <string name="ai_help">AI Help</string>
-    <string-array name="track_moves"> </string-array>
+     <string name="sort_by_date">Sort By Date</string>
+     <string name="sort_by_name">Sort By Name</string>
+     <string-array name="track_moves"> </string-array>
 
 </resources>

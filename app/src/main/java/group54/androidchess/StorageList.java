@@ -41,6 +41,7 @@ public class StorageList implements Serializable{
         movementSavingList = new ArrayList<Movements>();
     }
 
+
     /**
      *
      * @param p adding a user to save one by one

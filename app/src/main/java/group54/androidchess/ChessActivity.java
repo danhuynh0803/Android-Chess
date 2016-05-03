@@ -31,7 +31,10 @@ public class ChessActivity extends AppCompatActivity {
     public static TextView black;
     public static TextView turn;
     public int counter =1;
-    public static StorageList savedGames = new StorageList();;
+    public int gameTitleCounter=2;
+
+    //list to hold saved games
+    public static StorageList savedGames = new StorageList();
     public static File file;
     public static File newFile;
 
@@ -100,14 +103,24 @@ public class ChessActivity extends AppCompatActivity {
                                     gameTitle.setText("Untitled"+counter);
                                     counter++;
                                 }
+                                Log.d(chessboardView1.getContext().toString(),"list size: "+savedGames.getGameStorageListSize());
+                                //if duplicate name, then add a number to it
+                                for(int x=0; x<savedGames.getGameStorageListSize();x++){
+                                    String title = savedGames.getSavedList().get(x).getGameTitle();
+                                    if(title.equals(gameTitle.getText().toString())){
+                                        gameTitle.setText(gameTitle.getText().toString()+gameTitleCounter);
+                                        gameTitleCounter++;
+                                        Toast.makeText(chessboardView1.getContext(), "Game name added a counter to avoid duplication", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
 
                                 //make an object to hold game name, date and the data list
                                 Movements gameData = new Movements(gameTitle.getText().toString(),ChessboardView.tileList);
                                 //add to the savedGames list
                                 savedGames.addGameToSavedList(gameData);
-                                Toast.makeText(chessboardView1.getContext(), "Saved Game in"+newFile.getPath(), Toast.LENGTH_LONG).show();
-                                Log.d(chessboardView1.getContext().toString(),"Saved Game in"+newFile.getPath());
+                                Toast.makeText(chessboardView1.getContext(), "Saved as "+gameTitle.getText().toString()+ " in "+newFile.getPath(), Toast.LENGTH_LONG).show();
+                                //Log.d(chessboardView1.getContext().toString(),"Saved Game in"+newFile.getPath());
                                 try {
                                     StorageList.write(savedGames);
                                 }catch(Exception e){

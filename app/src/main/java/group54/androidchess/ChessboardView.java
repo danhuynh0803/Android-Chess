@@ -151,42 +151,49 @@ public final class ChessboardView extends View {
 
         if(ChessboardView.undoAvailable){
             // get all the appropriate values
+
             int tileListSize = tileList.size();
-            int iRow = tileList.get(tileListSize-1).getiRow();
-            int iCol = tileList.get(tileListSize-1).getiCol();
-            int fRow = tileList.get(tileListSize-1).getfRow();
-            int fCol = tileList.get(tileListSize-1).getfCol();
-            Piece initPiece = tileList.get(tileListSize-1).getInitialPiece();
-            Piece finalPiece = tileList.get(tileListSize-1).getFinalPiece();
-
-            //move back the piece to it's original spot
-            mTiles[iRow][iCol].setPiece(initPiece);
-            //remove the final piece and replace it with the original
-            mTiles[fRow][fCol].setPiece(finalPiece);
-
-            //if a piece was selected before presing undo, deselect that piece
-            for(int x =0; x<8; x++){
-                for(int y=0; y<8; y++){
-                    if(mTiles[x][y].selected==true) {
-                        mTiles[x][y].selected = false;
-                        mTiles[x][y].draw(canvas);
-                    }
-                }
-            }
-
-
-            undoAvailable=false;
-            updateBoard(mTiles);
-            Toast.makeText(getContext(), "Undo Successful", Toast.LENGTH_SHORT).show();
-            if (ChessboardView.currentTurn.equals("white")){
-                ChessActivity.white.setVisibility(View.INVISIBLE);
-                ChessActivity.black.setVisibility(View.VISIBLE);
-                ChessboardView.currentTurn = "black";
+            if(tileList.isEmpty()){
+                Toast.makeText(getContext(), "Undo Not Available", Toast.LENGTH_SHORT).show();
+                undoAvailable=false;
             }
             else {
-                ChessActivity.white.setVisibility(View.VISIBLE);
-                ChessActivity.black.setVisibility(View.INVISIBLE);
-                ChessboardView.currentTurn = "white";
+                int iRow = tileList.get(tileListSize - 1).getiRow();
+                int iCol = tileList.get(tileListSize - 1).getiCol();
+                int fRow = tileList.get(tileListSize - 1).getfRow();
+                int fCol = tileList.get(tileListSize - 1).getfCol();
+
+                Piece initPiece = tileList.get(tileListSize - 1).getInitialPiece();
+                Piece finalPiece = tileList.get(tileListSize - 1).getFinalPiece();
+
+                //move back the piece to it's original spot
+                mTiles[iRow][iCol].setPiece(initPiece);
+                //remove the final piece and replace it with the original
+                mTiles[fRow][fCol].setPiece(finalPiece);
+
+                //if a piece was selected before presing undo, deselect that piece
+                for (int x = 0; x < 8; x++) {
+                    for (int y = 0; y < 8; y++) {
+                        if (mTiles[x][y].selected == true) {
+                            mTiles[x][y].selected = false;
+                            mTiles[x][y].draw(canvas);
+                        }
+                    }
+                }
+
+
+                undoAvailable = false;
+                updateBoard(mTiles);
+                Toast.makeText(getContext(), "Undo Successful", Toast.LENGTH_SHORT).show();
+                if (ChessboardView.currentTurn.equals("white")) {
+                    ChessActivity.white.setVisibility(View.INVISIBLE);
+                    ChessActivity.black.setVisibility(View.VISIBLE);
+                    ChessboardView.currentTurn = "black";
+                } else {
+                    ChessActivity.white.setVisibility(View.VISIBLE);
+                    ChessActivity.black.setVisibility(View.INVISIBLE);
+                    ChessboardView.currentTurn = "white";
+                }
             }
 
         }
