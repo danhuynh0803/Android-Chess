@@ -41,8 +41,10 @@ public final class ChessboardView extends View {
 
     int initialX = -1;
     int initialY= -1;
-    public boolean firstTime = true; //to limit creation of more pieces
+    public boolean firstTime = true;   //to limit creation of more pieces
     public boolean firstSelect = true; //selecting the first time
+    public static boolean isGameOver = false; // prevent selection if game is over
+
     private int x0 = 0;
     private int y0 = 0;
     private int squareSize = 0;
@@ -140,7 +142,8 @@ public final class ChessboardView extends View {
     }
 
     public void onClick(){
-
+        if (isGameOver)
+            return;
 
         if(ChessboardView.undoAvailable){
             // get all the appropriate values
@@ -203,7 +206,10 @@ public final class ChessboardView extends View {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-       final int action = event.getAction();
+        if (isGameOver) {
+            return false;
+        }
+        final int action = event.getAction();
         if(action ==MotionEvent.ACTION_DOWN) {
             Canvas canvas = new Canvas();
             //eventPointerID = event.getPointerId(0);
@@ -219,9 +225,9 @@ public final class ChessboardView extends View {
                             //if an empty tile is selected, pop an error
                             Log.d(TAG, "row: " + r + " col: " + c);
                             if(mTiles[r][c].pieceName.equals("Empty")) {
-                                Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
                             } else if (!(mTiles[r][c].pieceColor.equals(currentTurn))) {
-                                Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 // Set tile color currently selected to blue
@@ -269,19 +275,11 @@ public final class ChessboardView extends View {
                     }
                 }
                 else{
-
-                    //int initCol=-1; //for initial Tile within mTiles array
-                   // int initRow=-1;
-
-                   // int finalCol=-1; //for final Tile within mTiles array
-                    //int finalRow=-1;
-
-                    //to get tile locations for intial tile and final tile
                     for (int r = 0; r < ROWS; r++) {
                         for (int c = 0; c < COLS; c++) {
                             if (mTiles[r][c].isTouched(initialX, initialY)){
-                                    initCol = c;
-                                    initRow = r;
+                                initCol = c;
+                                initRow = r;
                             }
                             if(mTiles[r][c].isTouched(finalX,finalY)){
                                 finalCol = c;
@@ -310,8 +308,14 @@ public final class ChessboardView extends View {
                             Log.d(TAG, "finalRow"+ finalRow);
                             Log.d(TAG, "finalCol"+ finalCol);
                             //checks the move of the selected piece
-                        if(mTiles[initRow][initCol].getPiece().legitMove(mTiles,initRow,initCol,finalRow,finalCol)) {
-                            undoAvailable = true;
+                            /*
+                            if (mTiles[initRow][initCol].pieceName.contains("P")) {
+                                initRow = swapRow(initRow);
+                                finalRow = swapRow(finalRow);
+                            }
+                            */
+                            if(mTiles[initRow][initCol].getPiece().legitMove(mTiles,initRow,initCol,finalRow,finalCol)) {
+                                undoAvailable = true;
                             // Check if the movement is from a King
                             if (mTiles[initRow][initCol].pieceName.equals("wK") || mTiles[initRow][initCol].pieceName.equals("bK")) {
                                 King king = (King) mTiles[initRow][initCol].getPiece();
@@ -412,6 +416,9 @@ public final class ChessboardView extends View {
      * @param tile current tiles holding the data
      */
     public void updateBoard(Tile tile[][]){
+        if (isGameOver){
+            return;
+        }
         //Canvas canvas = new Canvas();
         Bitmap pic;
         Bitmap picResized;
@@ -671,18 +678,23 @@ public final class ChessboardView extends View {
         mTiles[7][3].setPiece(queen);
     }
 
-    /*
-    private void moveQueen(){
-
-            Queen queen;
-            //create the White Queen
-            pic = BitmapFactory.decodeResource(getResources(),R.drawable.whitequeen);
-            picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-            mTiles[0][7].draw(canvas);
-            mTiles[0][7].draw(canvas,mTiles[0][7].getTileRect(),picResized);
-            queen = new Queen("wQ","white");
-            mTiles[0][7].setPiece(queen);
+    /**
+     * Swap values of the row
+     * @param row
+     * @return
+     */
+    private int swapRow(int row) {
+        int newRow = 0;
+        switch(row) {
+            case 0: newRow = 7; break;
+            case 1: newRow = 6; break;
+            case 2: newRow = 5; break;
+            case 3: newRow = 4; break;
+            case 4: newRow = 3; break;
+            case 5: newRow = 2; break;
+            case 6: newRow = 1; break;
+            case 7: newRow = 0; break;
+        }
+        return newRow;
     }
-*/
-
 }
