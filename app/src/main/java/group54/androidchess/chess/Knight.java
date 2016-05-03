@@ -51,7 +51,12 @@ public class Knight extends Piece {
 		{
 			return false;
 		}
-		
+
+		else if (rowDiff > 2 || colDiff > 2)
+		{
+			return false;
+		}
+
 		// Check if the final position is currently being occupied by a piece of the same color
 		if (gameBoard[finalRow][finalColumn].pieceColor == this.pieceColor)
 		{
