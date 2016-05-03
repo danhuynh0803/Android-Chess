@@ -62,6 +62,8 @@ public class ChessActivity extends AppCompatActivity {
                         }
                         drawBtn.setVisibility(View.GONE);      // Hide buttons after game ends
                         resignBtn.setVisibility(View.GONE);
+                        undoBtn.setVisibility(View.GONE);
+                        helpBtn.setVisibility(View.GONE);
 
                     }
                 });
@@ -97,6 +99,8 @@ public class ChessActivity extends AppCompatActivity {
                         turn.setText("Draw");
                         drawBtn.setVisibility(View.GONE);     // Hide buttons after game ends
                         resignBtn.setVisibility(View.GONE);
+                        undoBtn.setVisibility(View.GONE);
+                        helpBtn.setVisibility(View.GONE);
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
