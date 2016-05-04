@@ -29,6 +29,7 @@ public abstract class Piece {
  * 
  */	
 	public boolean firstMove;
+	public boolean nonfirstMove;
 /**
  * determines if the pawn can be captured using Enpassant Rule	
  */

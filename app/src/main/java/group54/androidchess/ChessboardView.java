@@ -175,6 +175,20 @@ public final class ChessboardView extends View {
 
                 //move back the piece to it's original spot
                 mTiles[iRow][iCol].setPiece(initPiece);
+                if (mTiles[iRow][iCol].pieceName.contains("P")) {
+                    System.out.println("given Pawn");
+                    Piece pawn = (Pawn) mTiles[iRow][iCol].getPiece();
+                    // Check if the pawn has not yet made a second move when pressing undo, this resets the pawn's first move boolean
+                    System.out.println(pawn.nonfirstMove + "");
+                    if (pawn.nonfirstMove == false) {
+                        //mTiles[iRow][iCol].firstMove = true;
+                        pawn.firstMove = true;
+                        pawn.nonfirstMove = false;
+                        mTiles[iRow][iCol].setPiece(pawn);
+                        mTiles[iRow][iCol].draw(canvas);
+                    }
+                }
+
                 //remove the final piece and replace it with the original
                 mTiles[fRow][fCol].setPiece(finalPiece);
 
@@ -731,8 +745,8 @@ public final class ChessboardView extends View {
         //create the White knight
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.whiteknight);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[0][1].draw(canvas,mTiles[1][0].getTileRect(),picResized);
-        mTiles[0][6].draw(canvas,mTiles[6][0].getTileRect(),picResized);
+        mTiles[0][1].draw(canvas,mTiles[0][1].getTileRect(),picResized);
+        mTiles[0][6].draw(canvas,mTiles[0][6].getTileRect(),picResized);
         knight = new Knight("wN","white");
         mTiles[0][1].setPiece(knight);
         mTiles[0][6].setPiece(knight);
@@ -785,7 +799,7 @@ public final class ChessboardView extends View {
         //create the Black King
         pic = BitmapFactory.decodeResource(getResources(),R.drawable.blackking);
         picResized = Bitmap.createScaledBitmap(pic,rectWidth,rectHeight,true);
-        mTiles[7][4].draw(canvas,mTiles[4][7].getTileRect(),picResized);
+        mTiles[7][4].draw(canvas,mTiles[7][4].getTileRect(),picResized);
         king = new King("bK","black");
         mTiles[7][4].setPiece(king);
     }

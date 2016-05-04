@@ -21,9 +21,19 @@ public class Pawn extends Piece implements Serializable{
         this.pieceName = pieceName;
         this.pieceColor = pieceColor;
         this.firstMove = true;
+        this.nonfirstMove = false;
         this.Enpassant = false;
     }
 
+    private void checkSecondMove()
+    {
+        if (this.firstMove == true) {
+            this.firstMove = false;
+            return;
+        }
+        else if (this.firstMove == false)
+            this.nonfirstMove = true;
+    }
 
 
     @Override
@@ -38,14 +48,14 @@ public class Pawn extends Piece implements Serializable{
                 //to only move 1 rank
                 if(  ((originalRow+1) == finalRow ) && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "black") ){
-                    this.firstMove = false;
+                    checkSecondMove();
                     return true;
                 }
                 //to move 2 ranks
                 if( originalRow+2 == finalRow && (originalColumn== finalColumn
                         && (gameBoard[finalRow][finalColumn].pieceColor != "black"))){
                     //gameBoard[originalRow][originalColumn].firstMove = false;
-                    this.firstMove = false;
+                    checkSecondMove();
                     this.Enpassant = true;
                     return true;
                 }
@@ -54,7 +64,7 @@ public class Pawn extends Piece implements Serializable{
                         (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
                                 || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
                     //gameBoard[originalRow][originalColumn].firstMove = false;
-                    this.firstMove = false;
+                    checkSecondMove();
                     this.Enpassant = true;
                     return true;
                 }
@@ -66,6 +76,7 @@ public class Pawn extends Piece implements Serializable{
                 if(originalRow+1 == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "black")){
                     this.Enpassant = false;
+                    checkSecondMove();
                     return true;
                 }
                 //to capture a piece
@@ -73,12 +84,14 @@ public class Pawn extends Piece implements Serializable{
                         (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
                                 || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
                     this.Enpassant = false;
+                    checkSecondMove();
                     return true;
                 }
                 //to capture via enpassant
                 else if( (gameBoard[originalRow+1][originalColumn+1] == gameBoard[finalRow][finalColumn]
                         || gameBoard[originalRow+1][originalColumn-1] == gameBoard[finalRow][finalColumn])
                         &&(gameBoard[finalRow+1][finalColumn].Enpassant==true)){       // Change finalRow + 1? to -1? or leave as is
+                    checkSecondMove();
                     return true;
 
                 }
@@ -91,13 +104,13 @@ public class Pawn extends Piece implements Serializable{
                 //to only move 1 rank
                 if(  (originalRow-1) == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "white")){
-                    this.firstMove = false;
+                    checkSecondMove();
                     return true;
                 }
                 //to move 2 ranks
                 if( originalRow-2 == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "white")){
-                    this.firstMove = false;
+                    checkSecondMove();
                     this.Enpassant = true;
                     return true;
                 }
@@ -105,7 +118,7 @@ public class Pawn extends Piece implements Serializable{
                 else if( (gameBoard[finalRow][finalColumn].pieceColor=="white") &&
                         (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
                                 || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
-                    this.firstMove = false;
+                    checkSecondMove();
                     return true;
                 }
 
@@ -115,6 +128,7 @@ public class Pawn extends Piece implements Serializable{
                 //to only move 1 rank
                 if(originalRow-1 == finalRow && (originalColumn== finalColumn)
                         && (gameBoard[finalRow][finalColumn].pieceColor != "white")){
+                    checkSecondMove();
                     this.Enpassant = false;
                     return true;
                 }
@@ -122,6 +136,7 @@ public class Pawn extends Piece implements Serializable{
                 else if( (gameBoard[finalRow][finalColumn].pieceColor=="white") &&
                         (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
                                 || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])){
+                    checkSecondMove();
                     this.Enpassant = false;
                     return true;
                 }
@@ -129,6 +144,7 @@ public class Pawn extends Piece implements Serializable{
                 else if( (gameBoard[originalRow-1][originalColumn+1] == gameBoard[finalRow][finalColumn]
                         || gameBoard[originalRow-1][originalColumn-1] == gameBoard[finalRow][finalColumn])
                         &&(gameBoard[finalRow+1][finalColumn].Enpassant==true)){  // Changed finalRow-1 to finalRow + 1
+                    checkSecondMove();
                     return true;
                 }
             }
