@@ -25,13 +25,8 @@ public class MainMenu extends AppCompatActivity {
     public void playOnClick(View v)
     {
         Bundle bundle = new Bundle();
-        Intent intent = new Intent(this, ChessActivity.class);
-        startActivity(intent);
-    }
-
-    public void recordOnClick(View v)
-    {
-        Bundle bundle = new Bundle();
+        ChessboardView.isGameOver = false;
+        ChessboardView.currentTurn = "white";
         Intent intent = new Intent(this, ChessActivity.class);
         startActivity(intent);
     }

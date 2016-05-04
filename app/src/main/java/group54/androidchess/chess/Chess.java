@@ -688,8 +688,8 @@ public class Chess {
 	
 	public static int getKingCol(Tile[][] gameBoard, String kingColor){
 		
-		for(int x=0; x<gameBoard.length-1; x++){
-			for(int y=0; y<gameBoard[x].length-1; y++){
+		for(int x=0; x<gameBoard.length; x++){
+			for(int y=0; y<gameBoard[x].length; y++){
 				if(gameBoard[x][y].pieceName.contains("K")
 						&& gameBoard[x][y].pieceColor==kingColor){
 					return y;

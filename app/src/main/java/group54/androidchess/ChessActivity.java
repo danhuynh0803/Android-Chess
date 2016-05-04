@@ -155,7 +155,6 @@ public class ChessActivity extends AppCompatActivity {
                 chessboardView1.invalidate();
             }
         });
-
         drawBtn.setOnClickListener( new View.OnClickListener(){
             public void onClick(View v){
                 v = chessboardView1;
@@ -178,6 +177,67 @@ public class ChessActivity extends AppCompatActivity {
                         resignBtn.setVisibility(View.GONE);
                         undoBtn.setVisibility(View.GONE);
                         helpBtn.setVisibility(View.GONE);
+
+                        //------------------- for saving data-------------------\\
+                        LinearLayout layout = new LinearLayout(chessboardView1.getContext());
+                        layout.setOrientation(LinearLayout.VERTICAL);
+
+                        AlertDialog.Builder savingDialog = new AlertDialog.Builder(chessboardView1.getContext());
+                        savingDialog.setMessage("Would you like to save this game?");
+                        final EditText gameTitle = new EditText(chessboardView1.getContext());
+                        gameTitle.setHint("Game Title: Untitled");
+                        layout.addView(gameTitle);
+                        savingDialog.setView(layout);
+                        //if you press yes
+                        savingDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //if game title isn't given, use default name
+                                if(gameTitle.getText().toString().isEmpty()){
+                                    gameTitle.setText("Untitled"+counter);
+                                    counter++;
+                                }
+                                Log.d(chessboardView1.getContext().toString(),"list size: "+savedGames.getGameStorageListSize());
+                                //if duplicate name, then add a number to it
+                                for(int x=0; x<savedGames.getGameStorageListSize();x++){
+                                    String title = savedGames.getSavedList().get(x).getGameTitle();
+                                    if(title.equals(gameTitle.getText().toString())){
+                                        gameTitle.setText(gameTitle.getText().toString()+gameTitleCounter);
+                                        gameTitleCounter++;
+                                        Toast.makeText(chessboardView1.getContext(), "Game name added a counter to avoid duplication", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+
+                                //make an object to hold game name, date and the data list
+                                Movements gameData = new Movements(gameTitle.getText().toString(),ChessboardView.tileList);
+                                //add to the savedGames list
+                                savedGames.addGameToSavedList(gameData);
+                                Toast.makeText(chessboardView1.getContext(), "Saved as "+gameTitle.getText().toString()+ " in "+newFile.getPath(), Toast.LENGTH_LONG).show();
+                                //Log.d(chessboardView1.getContext().toString(),"Saved Game in"+newFile.getPath());
+                                try {
+                                    StorageList.write(savedGames);
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                        //if you press no
+                        savingDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alert1 = savingDialog.create();
+                        alert1.show();
+
+
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -190,7 +250,6 @@ public class ChessActivity extends AppCompatActivity {
                 chessboardView1.invalidate();
             }
         });
-
 
         undoBtn.setOnClickListener( new View.OnClickListener(){
             public void onClick(View v){

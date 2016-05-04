@@ -30,6 +30,7 @@ public final class ChessboardView extends View {
     private static final int COLS = 8;
     private static final int ROWS = 8;
 
+
     public static Tile[][] mTiles;
     public static ArrayList<PieceInfo> tileList;//holds the data
 
@@ -46,7 +47,7 @@ public final class ChessboardView extends View {
     public static boolean firstSelect = true; //selecting the first time
     public static boolean isGameOver = false; // prevent selection if game is over
 
-
+    // Tile coordinates
     private int x0 = 0;
     private int y0 = 0;
     private int squareSize = 0;
@@ -54,7 +55,13 @@ public final class ChessboardView extends View {
 
     public static String currentTurn = "white";
     public static boolean undoAvailable = false;
-    //public static ArrayList listPieceInfo;
+
+    // Booleans to keep track of check/promotion/enpassant
+    boolean kingInCheck = false;
+    boolean firstMoveChangeBack = false;
+    boolean enpassantChangeBack = false;
+    boolean whiteEnpassantAllowed = false;
+    boolean blackEnpassantAllowed = false;
 
     /** 'true' if black is facing player. */
     private boolean flipped = false;
@@ -346,9 +353,7 @@ public final class ChessboardView extends View {
                                 // Check if king is castling
                                 if (king.isCastling()) {
                                     // Check the side the king is castling to by comparing difference between columns
-                                    Toast.makeText(getContext(), "King castles", Toast.LENGTH_SHORT).show();
-// Check which side the king is castling by comparing the difference between columns
-                                    int colDiff = finalRow - initRow;
+                                    int colDiff = finalCol - initCol;
                                     if (colDiff > 0) {
                                         // Castle the right-side rook by moving king to final position
                                         mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
@@ -404,14 +409,115 @@ public final class ChessboardView extends View {
                                 mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
                                 mTiles[initRow][initCol].draw(canvas);
 
-                            }
+                            }  if (kingInCheck == true) {
+                                    // Find if any kings have been placed into check due to that move
+                                    outerloop:
+                                    for (int x = 0; x < mTiles.length; x++) {
+                                        for (int y = 0; y < mTiles[x].length; y++) {
+                                            if (mTiles[x][y].pieceColor != currentTurn) {
+                                                if (mTiles[x][y].getPiece().placeCheck(mTiles, x, y) == true) {
+                                                    //take back the move since king is still in check
+                                                    Toast.makeText(getContext(), currentTurn + " King still in check", Toast.LENGTH_SHORT).show();
 
-                            //after the legitMove boolean check,
-                            Toast.makeText(getContext(), "im here", Toast.LENGTH_SHORT).show();
-                            firstSelect = true;
+                                                    mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
+                                                    mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                    mTiles[finalRow][finalCol].draw(canvas);
+                                                    //gives the piece the ability to make first move again
+                                                    if (firstMoveChangeBack == true) {
+                                                        mTiles[initRow][initCol].firstMove = true;
+                                                    }
+                                                    //go back to false enpassant, since move was taken back
+                                                    if (enpassantChangeBack == true) {
+                                                        mTiles[initRow][initCol].Enpassant = false;
+                                                    }
+                                                    break outerloop;//exits the entire loop
+                                                    //	counterForCheck++;
+                                                }
+                                            }
 
-                            // Switch to other player turn
-                            currentTurn = switchTurn(currentTurn);
+                                        }
+                                    }
+                                }
+                                //so if the move does occur, check opponent piece for a check on ur own king
+                                else if (mTiles[finalRow][finalCol].pieceColor == currentTurn) {
+                                    kingInCheck = false;
+                                    outerloop:
+                                    for (int x = 0; x < mTiles.length; x++) {//skip last row
+                                        for (int y = 0; y < mTiles[x].length; y++) {//skip last column
+                                            if (mTiles[x][y].pieceColor != currentTurn) {
+                                                if (mTiles[x][y].getPiece().placeCheck(mTiles, x, y) == true) {
+                                                    Toast.makeText(getContext(), "Invalid: King in check", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, mTiles[x][y].pieceName + mTiles[x][y].pieceColor);
+                                                    Log.d(TAG, "row:" + x + " col:" + y);
+                                                    if (mTiles[finalRow][finalCol].pieceName.equals(currentTurn.charAt(0) + "K") &&
+                                                            Math.abs(finalCol - initCol) == 2) {
+                                                        // Place king back into position
+                                                        mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
+                                                        mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                        mTiles[finalRow][finalCol].draw(canvas);
+                                                        int rookCol = 0;
+                                                        // Place right rook back into position
+                                                        if (finalCol - initCol > 0) {
+                                                            rookCol = 7;
+                                                            mTiles[initRow][rookCol].setPiece(mTiles[finalRow][finalCol - 1].getPiece());
+                                                            mTiles[initRow][rookCol].draw(canvas);
+                                                            mTiles[finalRow][finalCol - 1].setPiece(new WhiteSpaces("Empty"));
+                                                            mTiles[finalRow][finalCol - 1].draw(canvas);
+
+                                                        }
+                                                        // Place left rook back into position
+                                                        else if (finalCol - initCol < 0) {
+                                                            rookCol = 0;
+                                                            mTiles[initRow][rookCol].setPiece(mTiles[finalRow][finalCol + 1].getPiece());
+                                                            mTiles[initRow][rookCol].draw(canvas);
+                                                            mTiles[finalRow][finalCol + 1].setPiece(new WhiteSpaces("Empty"));
+                                                            mTiles[finalRow][finalCol + 1].draw(canvas);
+                                                        }
+                                                    }
+                                                    // For non-king pieces and kings that do not castle
+                                                    else {
+                                                        mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
+                                                        mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                        mTiles[finalRow][finalCol].draw(canvas);
+                                                    }
+                                                    //gives the piece the ability to make first move again
+                                                    if (firstMoveChangeBack == true) {
+                                                        mTiles[initRow][initCol].firstMove = true;
+                                                    }
+                                                    //Enpassant need to become false again
+                                                    if (enpassantChangeBack == true) {
+                                                        mTiles[initRow][initCol].Enpassant = false;
+                                                    }
+
+                                                    break outerloop;//exits the entire loop
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                //if the piece does move, then check to see if that piece can place check on opponent
+                                if (mTiles[finalRow][finalCol].pieceColor.equals(currentTurn)) {
+                                    if (mTiles[finalRow][finalCol].getPiece().placeCheck(mTiles, finalRow, finalCol) == true) {
+                                        String tempTurn = mTiles[finalRow][finalCol].pieceColor;
+                                        tempTurn = switchTurn(tempTurn);
+                                        Toast.makeText(getContext(), mTiles[finalRow][finalCol].pieceName + " placed a check on " + tempTurn + "'s King", Toast.LENGTH_SHORT).show();
+                                        kingInCheck = true;
+
+                                        // Find the location of the enemy king currently in check
+                                        int kingRow = Chess.getKingRow(mTiles, tempTurn);
+                                        int kingCol = Chess.getKingCol(mTiles, tempTurn);
+                                        King king = (King) mTiles[kingRow][kingCol].getPiece();
+                                        // Set check to true to prevent castling
+                                        king.setCheck(true);
+                                    }
+                                    //add method here for checkmate
+                                }
+                                //if no errors occur above, end turn
+                                firstSelect = true;
+                                // Switch to other player turn
+                                currentTurn = switchTurn(currentTurn);
                         }
 
                         }catch(Exception e){ }
