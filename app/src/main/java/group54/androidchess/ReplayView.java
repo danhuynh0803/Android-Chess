@@ -41,6 +41,7 @@ public final class ReplayView extends View {
     private int squareSize = 0;
     public boolean firstTime2 = true;   //to limit creation of more pieces
     private boolean flipped = false;
+    int x=0;//for runnable thread
 
 
 
@@ -72,24 +73,20 @@ public final class ReplayView extends View {
     @Override
     protected void onDraw( Canvas canvas) {
         this.canvas = canvas;
+        Log.d(ReplayView.class.getSimpleName(),"IN ondraw method");
 
-        if (firstTime2) {
-
-            //for Creating Pieces
-            buildEmptyTiles();
-            createPawns();
-            createRooks();
-            createKnights();
-            createBishops();
-            createKings();
-            createQueens();
-
-            firstTime2 = false;
-
+        if(firstTime2) {
+            updateBoard(mTiles2);
+            firstTime2=false;
         }
         else{
+
             updateBoard(mTiles2);
+
         }
+
+
+
     }
     public void buildEmptyTiles(){
 
@@ -244,7 +241,7 @@ public final class ReplayView extends View {
     /**
      * creates the pawn pieces on the board
      */
-    private void createPawns()
+    public void createPawns()
     {
         //creates the white pawns
 
@@ -276,7 +273,7 @@ public final class ReplayView extends View {
     /**
      * creates the rooks on the board
      */
-    private void createRooks()
+    public void createRooks()
     {
         Rook rook;
         //create the White rooks
@@ -302,7 +299,7 @@ public final class ReplayView extends View {
     /**
      * creating knight pieces
      */
-    private void createKnights()
+    public void createKnights()
     {
 
         Knight knight;
@@ -328,7 +325,7 @@ public final class ReplayView extends View {
     /**
      * creating bishop pieces
      */
-    private void createBishops()
+    public void createBishops()
     {
         Bishop bishop;
         //create the White Bishop
@@ -350,7 +347,7 @@ public final class ReplayView extends View {
         mTiles2[7][5].setPiece(bishop);
     }
 
-    private void createKings()
+    public void createKings()
     {
         King king;
         //create the White King
@@ -368,7 +365,7 @@ public final class ReplayView extends View {
         mTiles2[7][4].setPiece(king);
     }
 
-    private void createQueens()
+    public void createQueens()
     {
         Queen queen;
         //create the White Queen
