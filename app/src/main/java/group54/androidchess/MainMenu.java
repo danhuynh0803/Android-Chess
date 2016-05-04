@@ -7,6 +7,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import group54.androidchess.chess.Chess;
+
 /**
  * Created by Danny Huynh on 4/25/2016.
  */
@@ -24,6 +26,8 @@ public class MainMenu extends AppCompatActivity {
         ChessboardView.isGameOver = false;
         ChessboardView.currentTurn = "white";
         ChessboardView.undoAvailable = true;
+        ChessboardView.kingInCheck = false;
+        ChessboardView.firstSelect = true;
         Intent intent = new Intent(this, ChessActivity.class);
         startActivity(intent);
     }

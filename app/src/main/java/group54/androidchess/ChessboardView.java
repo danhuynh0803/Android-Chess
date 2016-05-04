@@ -57,7 +57,7 @@ public final class ChessboardView extends View {
     public static boolean undoAvailable = false;
 
     // Booleans to keep track of check/promotion/enpassant
-    boolean kingInCheck = false;
+    static boolean kingInCheck = false;
     boolean firstMoveChangeBack = false;
     boolean enpassantChangeBack = false;
     boolean whiteEnpassantAllowed = false;
