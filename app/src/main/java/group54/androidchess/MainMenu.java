@@ -12,10 +12,6 @@ import java.util.ArrayList;
  */
 public class MainMenu extends AppCompatActivity {
 
-    private boolean isRecording = false;
-    private ArrayList<String> gameReplay = new ArrayList<String>();
-    private Replay[] replay = new Replay[10];          // Store the 10 most recent games
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

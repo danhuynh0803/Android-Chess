@@ -1,9 +1,11 @@
 package group54.androidchess;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -21,9 +23,11 @@ public class Replay extends AppCompatActivity {
 
     private ListView nameListView;
     private ListView dateListView;
-    private ArrayList<String> gameNameList;
+    public static ArrayList<String> gameNameList;
     private ArrayList<String> dateList;
     private ArrayList<String> tempList;
+    public static String selectedFromList;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,7 @@ public class Replay extends AppCompatActivity {
 
         final Button nameSortBtn = (Button) findViewById(R.id.nameSortBtn);
         final Button dateSortBtn = (Button) findViewById(R.id.dateSortBtn);
+
         View view = new View(this);
 
         nameListView = (ListView)findViewById(R.id.gameListView);
@@ -112,8 +117,39 @@ public class Replay extends AppCompatActivity {
                     }
                 });
 
-       // nameListView.invalidate();
-        //dateListView.invalidate();
+        //saves the selection from the list to
+        nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long mylng) {
+                selectedFromList = (String) (nameListView.getItemAtPosition(myItemInt));
+            }
+        });
+
+
+    }
+
+    //takes you to PayBackGame.java activity
+    public void playSavedGameOnClick(View v)
+    {
+
+        //Play Saved Game Button is clicked
+        final Button gamePlayBtn = (Button) findViewById(R.id.playBtn);
+        gamePlayBtn.setOnClickListener( new View.OnClickListener(){
+            public void onClick(View v){
+                if(selectedFromList==null){
+                    Toast.makeText(v.getContext(), "No Game Selected", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(v.getContext(), "Game Selected: "+selectedFromList, Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    Intent intent = new Intent(v.getContext(), PlayBackGame.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+            }
+
+        });
+
     }
 
 

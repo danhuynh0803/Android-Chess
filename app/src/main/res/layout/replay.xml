@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:choiceMode="singleChoice"
-         />
+        android:listSelector="@android:color/darker_gray" />
     <!--<ListView
         android:layout_width="130dp"
         android:layout_height="match_parent"
@@ -51,7 +51,8 @@
         android:layout_below="@+id/gameListView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp"
+        android:onClick="playSavedGameOnClick" />
 
     <Button
         android:layout_width="wrap_content"

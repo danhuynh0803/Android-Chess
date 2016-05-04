@@ -254,9 +254,9 @@ public final class ChessboardView extends View {
                             //if an empty tile is selected, pop an error
                             Log.d(TAG, "row: " + r + " col: " + c);
                             if(mTiles[r][c].pieceName.equals("Empty")) {
-                                //Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
                             } else if (!(mTiles[r][c].pieceColor.equals(currentTurn))) {
-                                //Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 // Set tile color currently selected to blue
@@ -770,7 +770,7 @@ public final class ChessboardView extends View {
         bishop = new Bishop("bB","black");
         mTiles[7][2].setPiece(bishop);
         mTiles[7][5].setPiece(bishop);
-    }
+}
 
     private void createKings()
     {

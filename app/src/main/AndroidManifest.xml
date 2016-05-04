@@ -40,6 +40,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        <activity android:name=".PlayBackGame"></activity>
+        <intent-filter>
+            android:name=".PlayBackGame">
+            android:parentActivityName=".PlayBackGame"
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PlayBackGame" />
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
     </application>
 
 </manifest>
