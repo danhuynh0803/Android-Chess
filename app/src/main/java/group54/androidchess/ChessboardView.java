@@ -219,7 +219,7 @@ public final class ChessboardView extends View {
 
         }
         else{
-            Toast.makeText(getContext(), "Undo Not Available", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Undo Not Available", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -268,9 +268,9 @@ public final class ChessboardView extends View {
                             //if an empty tile is selected, pop an error
                             Log.d(TAG, "row: " + r + " col: " + c);
                             if(mTiles[r][c].pieceName.equals("Empty")) {
-                                Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "Please Select a Piece", Toast.LENGTH_SHORT).show();
                             } else if (!(mTiles[r][c].pieceColor.equals(currentTurn))) {
-                                Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "Select your own piece!", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 // Set tile color currently selected to blue
@@ -287,19 +287,9 @@ public final class ChessboardView extends View {
 
             //options for 2nd selection
             else {
-
-                //int eventPointerIndex = event.findPointerIndex(eventPointerID);
                 final int finalX = (int) event.getX();
                 final int finalY = (int) event.getY();
-                //final int initialX = (int) event.getX(eventPointerIndex);
-                //final int initialY = (int) event.getY(eventPointerIndex);
 
-                Log.d(TAG,"initial x:"+initialX);
-                Log.d(TAG,"initial y:"+initialY);
-                Log.d(TAG,"final x:"+finalX);
-                Log.d(TAG,"final y:"+finalY);
-
-                //make sure the inital values were set
                 if(initialX==-1 || initialY==-1){
                     Toast.makeText(getContext(), "Error Occured, Try Again", Toast.LENGTH_SHORT).show();
                 }
@@ -338,7 +328,7 @@ public final class ChessboardView extends View {
                     }
                     //makes sures to reset the highlight if user tries to kil their own piece
                     else if(mTiles[initRow][initCol].pieceColor.equals(mTiles[finalRow][finalCol].pieceColor)){
-                        Toast.makeText(getContext(), "Cannot kill your own piece!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "Cannot kill your own piece!", Toast.LENGTH_SHORT).show();
                         mTiles[initRow][initCol].selected = false;
                         mTiles[initRow][initCol].draw(canvas);
                         firstSelect = true;
@@ -417,6 +407,9 @@ public final class ChessboardView extends View {
                                     mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
                                     mTiles[initRow][initCol].draw(canvas);
 
+                                    initPiece = mTiles[initRow][initCol].getPiece();      // Store init piece
+                                    finalPiece = mTiles[finalRow][finalCol].getPiece();   // Store final piece
+
                                 }
                                 //if king is not being moved, then move the selected pieces
                             } else {
@@ -424,6 +417,10 @@ public final class ChessboardView extends View {
                                 storeData();
                                 initPiece = mTiles[initRow][initCol].getPiece();      // Store init piece
                                 finalPiece = mTiles[finalRow][finalCol].getPiece();   // Store final piece
+
+                                if (finalPiece.pieceName.equals(initPiece.pieceName)) {
+                                    finalPiece = null;
+                                }
                                 mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
                                 mTiles[initRow][initCol].selected = false;
                                 mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
@@ -443,13 +440,15 @@ public final class ChessboardView extends View {
                                                     checkPiece.checkX = x;
                                                     checkPiece.checkY = y;
                                                     mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
-                                                    if (finalPiece != null || finalPiece.pieceName != "Empty") {
+                                                    if ((finalPiece != null || finalPiece.pieceName != "Empty") && !initPiece.pieceName.equals("Empty")) {
                                                         mTiles[finalRow][finalCol].setPiece(finalPiece);
+                                                    } else if (finalPiece.pieceName.equals(initPiece.pieceName)) {
+                                                        mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
                                                     } else {
                                                         mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
                                                     }
                                                     mTiles[finalRow][finalCol].draw(canvas);
-
+                                                    undoAvailable = false;
                                                     //gives the piece the ability to make first move again
                                                     if (firstMoveChangeBack == true) {
                                                         mTiles[initRow][initCol].firstMove = true;
@@ -510,13 +509,16 @@ public final class ChessboardView extends View {
                                                     // For non-king pieces and kings that do not castle
                                                     else {
                                                         mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
-                                                        if (finalPiece != null || finalPiece.pieceName != "Empty") {
+                                                        if ((finalPiece != null || finalPiece.pieceName != "Empty") && !initPiece.pieceName.equals("Empty")) {
                                                             mTiles[finalRow][finalCol].setPiece(finalPiece);
+                                                        } else if (finalPiece.pieceName.equals(initPiece.pieceName)) {
+                                                            mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
                                                         } else {
                                                             mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
                                                         }
                                                         mTiles[finalRow][finalCol].draw(canvas);
                                                     }
+                                                    undoAvailable = false;
                                                     //gives the piece the ability to make first move again
                                                     if (firstMoveChangeBack == true) {
                                                         mTiles[initRow][initCol].firstMove = true;

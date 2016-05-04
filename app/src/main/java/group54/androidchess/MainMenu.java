@@ -23,6 +23,7 @@ public class MainMenu extends AppCompatActivity {
         Bundle bundle = new Bundle();
         ChessboardView.isGameOver = false;
         ChessboardView.currentTurn = "white";
+        ChessboardView.undoAvailable = true;
         Intent intent = new Intent(this, ChessActivity.class);
         startActivity(intent);
     }
