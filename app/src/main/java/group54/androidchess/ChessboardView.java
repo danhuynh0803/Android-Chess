@@ -346,7 +346,11 @@ public final class ChessboardView extends View {
                     }
                     //if final tile is chosen anywhere besides own piece
                     else {
-                        //Log.d(TAG,""+mTiles[initCol][initRow].firstMove);
+
+                        Piece initPiece = null;    // Piece at the initial position
+                        Piece finalPiece = null;   // Piece at the final position
+                        Piece checkPiece = null;   // Piece that is/will cause check on the king
+                        boolean resetTurn = false; // Allow current player to have another turn due to invalid moves
                         try{
                             Log.d(TAG, "initRow"+ initRow);
                             Log.d(TAG, "initCol"+ initCol);
@@ -359,6 +363,7 @@ public final class ChessboardView extends View {
                                 finalRow = swapRow(finalRow);
                             }
                             */
+
                             if(mTiles[initRow][initCol].getPiece().legitMove(mTiles,initRow,initCol,finalRow,finalCol)) {
                                 undoAvailable = true;
                             // Check if the movement is from a King
@@ -417,7 +422,8 @@ public final class ChessboardView extends View {
                             } else {
                                 //store the moves
                                 storeData();
-                                Log.d(TAG, "" + mTiles[initCol][initRow].firstMove);
+                                initPiece = mTiles[initRow][initCol].getPiece();      // Store init piece
+                                finalPiece = mTiles[finalRow][finalCol].getPiece();   // Store final piece
                                 mTiles[finalRow][finalCol].setPiece(mTiles[initRow][initCol].getPiece());
                                 mTiles[initRow][initCol].selected = false;
                                 mTiles[initRow][initCol].setPiece(new WhiteSpaces("Empty"));
@@ -432,10 +438,18 @@ public final class ChessboardView extends View {
                                                 if (mTiles[x][y].getPiece().placeCheck(mTiles, x, y) == true) {
                                                     //take back the move since king is still in check
                                                     Toast.makeText(getContext(), currentTurn + " King still in check", Toast.LENGTH_SHORT).show();
-
+                                                    System.out.println("Piece giving check:" + mTiles[x][y].pieceName);
+                                                    checkPiece = mTiles[x][y].getPiece();
+                                                    checkPiece.checkX = x;
+                                                    checkPiece.checkY = y;
                                                     mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
-                                                    mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                    if (finalPiece != null || finalPiece.pieceName != "Empty") {
+                                                        mTiles[finalRow][finalCol].setPiece(finalPiece);
+                                                    } else {
+                                                        mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                    }
                                                     mTiles[finalRow][finalCol].draw(canvas);
+
                                                     //gives the piece the ability to make first move again
                                                     if (firstMoveChangeBack == true) {
                                                         mTiles[initRow][initCol].firstMove = true;
@@ -461,6 +475,11 @@ public final class ChessboardView extends View {
                                             if (mTiles[x][y].pieceColor != currentTurn) {
                                                 if (mTiles[x][y].getPiece().placeCheck(mTiles, x, y) == true) {
                                                     Toast.makeText(getContext(), "Invalid: King in check", Toast.LENGTH_SHORT).show();
+                                                    resetTurn = true;
+                                                    System.out.println("Piece giving check:" + mTiles[x][y].pieceName);
+                                                    checkPiece = mTiles[x][y].getPiece();
+                                                    checkPiece.checkX = x;
+                                                    checkPiece.checkY = y;
                                                     Log.d(TAG, mTiles[x][y].pieceName + mTiles[x][y].pieceColor);
                                                     Log.d(TAG, "row:" + x + " col:" + y);
                                                     if (mTiles[finalRow][finalCol].pieceName.equals(currentTurn.charAt(0) + "K") &&
@@ -491,7 +510,11 @@ public final class ChessboardView extends View {
                                                     // For non-king pieces and kings that do not castle
                                                     else {
                                                         mTiles[initRow][initCol].setPiece(mTiles[finalRow][finalCol].getPiece());
-                                                        mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                        if (finalPiece != null || finalPiece.pieceName != "Empty") {
+                                                            mTiles[finalRow][finalCol].setPiece(finalPiece);
+                                                        } else {
+                                                            mTiles[finalRow][finalCol].setPiece(new WhiteSpaces("Empty"));
+                                                        }
                                                         mTiles[finalRow][finalCol].draw(canvas);
                                                     }
                                                     //gives the piece the ability to make first move again
@@ -517,6 +540,10 @@ public final class ChessboardView extends View {
                                         String tempTurn = mTiles[finalRow][finalCol].pieceColor;
                                         tempTurn = switchTurn(tempTurn);
                                         Toast.makeText(getContext(), mTiles[finalRow][finalCol].pieceName + " placed a check on " + tempTurn + "'s King", Toast.LENGTH_SHORT).show();
+                                        System.out.println("Piece giving check:" + mTiles[finalRow][finalCol].pieceName);
+                                        checkPiece = mTiles[finalRow][finalCol].getPiece();
+                                        checkPiece.checkX = finalRow;
+                                        checkPiece.checkY = finalCol;
                                         kingInCheck = true;
 
                                         // Find the location of the enemy king currently in check
@@ -531,7 +558,8 @@ public final class ChessboardView extends View {
                                 //if no errors occur above, end turn
                                 firstSelect = true;
                                 // Switch to other player turn
-                                currentTurn = switchTurn(currentTurn);
+                                if (resetTurn == false)
+                                    currentTurn = switchTurn(currentTurn);
                         }
 
                         }catch(Exception e){ }

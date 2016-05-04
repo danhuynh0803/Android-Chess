@@ -34,7 +34,10 @@ public abstract class Piece {
  * determines if the pawn can be captured using Enpassant Rule	
  */
 	public boolean Enpassant;
-	
+
+	// The piece's current position if it is found to check the enemy king
+	public int checkX, checkY;
+
 	/*
 	/**
 	 * Index values that correspond to the position of the piece on the gameboard
