@@ -100,21 +100,21 @@ public class ChessActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 //if game title isn't given, use default name
                                 if(gameTitle.getText().toString().isEmpty()){
-                                    gameTitle.setText("Untitled"+counter);
-                                    counter++;
+                                    gameTitle.setText("Untitled");
                                 }
                                 Log.d(chessboardView1.getContext().toString(),"list size: "+savedGames.getGameStorageListSize());
+                                Log.d(chessboardView1.getContext().toString(),"Game Name: "+gameTitle.getText());
                                 //if duplicate name, then add a number to it
                                 for(int x=0; x<savedGames.getGameStorageListSize();x++){
                                     String title = savedGames.getSavedList().get(x).getGameTitle();
                                     if(title.equals(gameTitle.getText().toString())){
-                                        gameTitle.setText(gameTitle.getText().toString()+gameTitleCounter);
-                                        gameTitleCounter++;
+                                        gameTitle.setText(gameTitle.getText().toString()+counter);
+                                        counter++;
                                         Toast.makeText(chessboardView1.getContext(), "Game name added a counter to avoid duplication", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
-
+                                Log.d(chessboardView1.getContext().toString(),"Game Name: "+gameTitle.getText());
                                 //make an object to hold game name, date and the data list
                                 Movements gameData = new Movements(gameTitle.getText().toString(),ChessboardView.tileList);
                                 //add to the savedGames list
