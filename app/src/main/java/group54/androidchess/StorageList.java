@@ -95,7 +95,7 @@ public class StorageList implements Serializable{
      */
     public static StorageList read()throws IOException, ClassNotFoundException{
         ObjectInputStream loadFrom = new ObjectInputStream(
-                new FileInputStream(storeDir + File.separator+ storeFile ));
+                new FileInputStream(ChessActivity.newFile ));
         return (StorageList) loadFrom.readObject();
 
     }

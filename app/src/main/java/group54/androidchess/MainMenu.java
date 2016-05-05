@@ -12,12 +12,24 @@ import group54.androidchess.chess.Chess;
 /**
  * Created by Danny Huynh on 4/25/2016.
  */
+
+
 public class MainMenu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+        //add loading serialization here
+
+        try{
+            ChessboardView.tileList.clear();
+            ChessActivity.savedGames = StorageList.read();
+
+        }catch(Exception d){
+
+        }
+
     }
 
     public void playOnClick(View v)
