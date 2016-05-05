@@ -116,6 +116,8 @@ public class ChessActivity extends AppCompatActivity {
 
                                 Log.d(chessboardView1.getContext().toString(),"Game Name: "+gameTitle.getText());
                                 //make an object to hold game name, date and the data list
+                                //_________________________________________________added the resign message
+                                ChessboardView.tileList.add(new PieceInfo(0,0, new WhiteSpaces("Game Resigned by: "+ChessboardView.currentTurn)));
                                 Movements gameData = new Movements(gameTitle.getText().toString(),ChessboardView.tileList);
                                 //add to the savedGames list
                                 savedGames.addGameToSavedList(gameData);
@@ -210,6 +212,8 @@ public class ChessActivity extends AppCompatActivity {
 
                                 //make an object to hold game name, date and the data list
                                 Movements gameData = new Movements(gameTitle.getText().toString(),ChessboardView.tileList);
+                                //____message here for draw
+                                ChessboardView.tileList.add(new PieceInfo(0,0, new WhiteSpaces("Game Ended in a Draw!")));
                                 //add to the savedGames list
                                 savedGames.addGameToSavedList(gameData);
                                 Toast.makeText(chessboardView1.getContext(), "Saved as "+gameTitle.getText().toString()+ " in "+newFile.getPath(), Toast.LENGTH_LONG).show();
