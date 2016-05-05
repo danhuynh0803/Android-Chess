@@ -27,7 +27,7 @@ public class Replay extends AppCompatActivity {
     private ArrayList<String> dateList;
     private ArrayList<String> tempList;
     public static String selectedFromList;
-
+    public int selectionIndex = -1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +35,7 @@ public class Replay extends AppCompatActivity {
 
         final Button nameSortBtn = (Button) findViewById(R.id.nameSortBtn);
         final Button dateSortBtn = (Button) findViewById(R.id.dateSortBtn);
+        final Button deleteBtn = (Button) findViewById(R.id.deleteBtn);
 
         View view = new View(this);
 
@@ -120,9 +121,27 @@ public class Replay extends AppCompatActivity {
         //saves the selection from the list to
         nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long mylng) {
+                selectionIndex = myItemInt;
                 selectedFromList = (String) (nameListView.getItemAtPosition(myItemInt));
             }
         });
+
+        deleteBtn.
+                setOnClickListener( new View.OnClickListener() {
+                    public void onClick(View v) {
+                        if(gameNameList.isEmpty()){
+                            Toast.makeText(v.getContext(), "No replays currently", Toast.LENGTH_SHORT).show();
+                        } else if (selectionIndex == -1) {
+                            Toast.makeText(v.getContext(), "Select a replay to delete", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            gameNameList.remove(selectionIndex);
+                            gameArrayAdapter.notifyDataSetChanged();
+                            selectionIndex = -1;
+                        }
+
+                    }
+                });
 
 
     }
