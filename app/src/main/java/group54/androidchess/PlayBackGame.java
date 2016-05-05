@@ -9,7 +9,10 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +32,7 @@ public class PlayBackGame extends AppCompatActivity {
     public int inCol=0;
     public int finRow=0;
     public int finCol=0;
+    public String currentTurn = "white";
     HandlerThread readThread = new HandlerThread("");
 
     static Runnable r;
@@ -42,6 +46,8 @@ public class PlayBackGame extends AppCompatActivity {
         final ReplayView replayView = new ReplayView(this);
         setContentView(R.layout.recording);
         view =findViewById(R.id.ReplayView);
+        TextView white = (TextView) replayView.findViewById(R.id.whiteTurnTextView2);
+        TextView black = (TextView) replayView.findViewById(R.id.blackTurnTextView2);
         readThread.start();
         final Handler handler = new Handler(readThread.getLooper());
 
@@ -81,7 +87,7 @@ public class PlayBackGame extends AppCompatActivity {
 
 
 
-            int size = movementReplayList.size();
+            int size = movementReplayList.size()-1;
             int x = 0;
             while (x < size) {
 
@@ -93,8 +99,9 @@ public class PlayBackGame extends AppCompatActivity {
                     //replayView.invalidate();
                     x++;
                 }catch(Exception a){a.printStackTrace();}
-                //counter++;
+                Toast.makeText(replayView.getContext(),""+movementReplayList.get(movementReplayList.size()-1).getInitialPiece().pieceName, Toast.LENGTH_SHORT).show();
             }
+            //Toast.makeText(replayView.getContext(),""+movementReplayList.get(size).getInitialPiece().pieceName, Toast.LENGTH_SHORT).show();
         }r = new Runnable() {
             @Override
             public void run() {
@@ -115,17 +122,25 @@ public class PlayBackGame extends AppCompatActivity {
                     ReplayView.mTiles2[inRow][inCol].draw(canvas);
                     //place the final piece
                     ReplayView.mTiles2[finRow][finCol].setPiece(initPiece);
+
+
+
+
                     counter++;
+
                     view.postInvalidate();
-                    replayView.postInvalidate();
-                    handler.postDelayed(r, 3000);
+                    //replayView.postInvalidate();
+                    handler.postDelayed(r, 2000);
+
                     Log.d(PlayBackGame.class.getSimpleName(), "running thread");
                     //view.postInvalidate();
                 }catch (Exception a){}
 
             }
-        };handler.postDelayed(r,3000);
+        };
+        handler.postDelayed(r,2000);
         view.postInvalidate();
+
 
 
     }
