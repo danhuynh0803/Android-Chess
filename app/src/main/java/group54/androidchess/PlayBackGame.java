@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,7 +25,12 @@ public class PlayBackGame extends AppCompatActivity {
     private ArrayList<PieceInfo> movementReplayList = new ArrayList<PieceInfo>();
     public Piece initPiece;
     public Piece finalPiece;
-    Handler handler = new Handler(Looper.getMainLooper());
+    public int inRow = 0;
+    public int inCol=0;
+    public int finRow=0;
+    public int finCol=0;
+    HandlerThread readThread = new HandlerThread("");
+
     static Runnable r;
     View view;
     public int counter =0;
@@ -36,6 +42,8 @@ public class PlayBackGame extends AppCompatActivity {
         final ReplayView replayView = new ReplayView(this);
         setContentView(R.layout.recording);
         view =findViewById(R.id.ReplayView);
+        readThread.start();
+        final Handler handler = new Handler(readThread.getLooper());
 
 
         //find the correct game that was selected from the saved list
@@ -67,52 +75,40 @@ public class PlayBackGame extends AppCompatActivity {
             r = new Runnable() {
                 @Override
                 public void run() {
+                    int size = movementReplayList.size();
+                    int x = 0;
+                    boolean stopper =true;
+                    while (stopper) {
 
-
-                    //get the movement info
-
-                    try {
-                        Canvas canvas = new Canvas();
                         initPiece = movementReplayList.get(counter).getInitialPiece();
                         finalPiece = movementReplayList.get(counter).getFinalPiece();
-                        int inRow = movementReplayList.get(counter).getiRow();
-                        int inCol = movementReplayList.get(counter).getiCol();
-                        int finRow = movementReplayList.get(counter).getfRow();
-                        int finCol = movementReplayList.get(counter).getfCol();
+                        inRow = movementReplayList.get(counter).getiRow();
+                        inCol = movementReplayList.get(counter).getiCol();
+                        finRow = movementReplayList.get(counter).getfRow();
+                        finCol = movementReplayList.get(counter).getfCol();
+                        Canvas canvas = new Canvas();
                         //replace the initial pieces with blank tile
                         ReplayView.mTiles2[inRow][inCol].setPiece(new WhiteSpaces("Empty"));
                         ReplayView.mTiles2[inRow][inCol].draw(canvas);
                         //place the final piece
                         ReplayView.mTiles2[finRow][finCol].setPiece(initPiece);
-                        counter++;
                         view.postInvalidate();
-                        replayView.postInvalidate();
-                        handler.postDelayed(r, 3000);
-                        Log.d(PlayBackGame.class.getSimpleName(), "running thread");
-                        //view.postInvalidate();
-                    }catch (Exception a){}
 
+                        counter++;
+                        x++;
+                        if(x==size){
+                            stopper=false;
+                        }
+
+                        //view.postInvalidate();
+                    }
                 }
+                //counter++;
             };handler.postDelayed(r,3000);
             view.postInvalidate();
 
-
-
-            int size = movementReplayList.size();
-            int x = 0;
-            while (x < size) {
-
-                    try {
-                        r.run();
-                        //make the move
-
-                        //update the board
-                        //replayView.invalidate();
-                        x++;
-                    }catch(Exception a){a.printStackTrace();}
-                //counter++;
-            }
         }
+
 
     }
 
